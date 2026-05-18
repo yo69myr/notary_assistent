@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Notary Assistant — Premium Dashboard для нотаріуса</title>
-<meta name="description" content="Швидкий доступ до нотаріальних сервісів, курс НБУ та реєстри в одному преміум-інтерфейсі." />
+<title>АРМН — Dashboard для нотаріусів</title>
+<meta name="description" content="Швидкий доступ до необхідних сервісів, курсів валют НБУ та іншого." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -266,7 +266,7 @@
       <div class="brand-mark">N</div>
       <div>
         <div class="brand-title">Notary Assistant</div>
-        <div class="brand-sub">Premium dashboard</div>
+        <div class="brand-sub">АРМН</div>
       </div>
     </div>
   </div>
@@ -274,9 +274,9 @@
 
 <main>
   <section class="hero">
-    <div class="eyebrow"><span class="dot"></span> Робочий простір нотаріуса</div>
-    <h1>Notary Assistant</h1>
-    <p class="subtitle">Швидкий доступ до нотаріальних сервісів та актуального курсу НБУ — в одному місці.</p>
+    <div class="eyebrow"><span class="dot"></span> АРМН </div>
+    <h1>Dashboard для нотаріусів</h1>
+    <p class="subtitle">Швидкий доступ до сайтів, курсів валют іншого корисного — в одному місці.</p>
   </section>
 
   <section class="rates">
@@ -332,8 +332,8 @@
 </main>
 
 <footer>
-  <div>© <span id="year"></span> Notary Assistant — Premium dashboard для нотаріусів</div>
-  <div class="made">Created for нотаріальна практика</div>
+  <div>© <span id="year"></span> Notary Assistant версія від 18.05.2026 — АРМН </div>
+  <div class="made">Створено з повагою </div>
 </footer>
 
 <script>
@@ -368,24 +368,24 @@
       icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/><path d="M14 8h5v5"/></svg>`
     },
     {
-      name: "Privat24 Next",
+      name: "Приват24",
       desc: "Інтернет-банкінг ПриватБанк",
       url: "https://next.privat24.ua",
       tag: "Банк",
       icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 3l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>`
     },
     {
-      name: "OTP PrivatBank",
-      desc: "Підтвердження операцій ПриватБанк",
+      name: "Приват24 Бізнес",
+      desc: "ПриватБанк 24 для бізнесу",
       url: "https://otp24.privatbank.ua",
-      tag: "OTP",
+      tag: "Платежі",
       icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M11 18h2"/><path d="M9 6h6"/></svg>`
     },
     {
       name: "Реєстр боржників",
       desc: "Єдиний реєстр боржників",
       url: "https://erb.minjust.gov.ua/#/search-debtors",
-      tag: "Мін'юст",
+      tag: "боржники",
       icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/><path d="M8 11h6"/></svg>`
     },
     {
@@ -519,8 +519,8 @@
 
   document.getElementById('refreshBtn').addEventListener('click', loadRates);
   loadRates();
-  // авто-оновлення кожні 10 хвилин
-  setInterval(loadRates, 10 * 60 * 1000);
+  // авто-оновлення кожні 4 хвилини
+  setInterval(loadRates, 4 * 60 * 1000);
 </script>
 
 </body>
