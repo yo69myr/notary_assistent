@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>АРМН — Dashboard для нотаріусів</title>
+<meta name="description" content="Швидкий доступ до необхідних сервісів, курсів валют НБУ, апостиль, НПА та іншого." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#07080c;
+    --bg-1:#0b0d14;
+    --bg-2:#10131c;
+    --surface:rgba(20,24,36,0.55);
+    --surface-2:rgba(28,33,48,0.65);
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --text:#e8ecf3;
+    --text-dim:#9aa3b2;
+    --text-muted:#6b7384;
+    --accent:#7c9cff;
+    --accent-2:#9d7bff;
+    --success:#3ddc97;
+    --danger:#ff6b6b;
+    --radius:18px;
+    --shadow-lg:0 30px 80px -20px rgba(0,0,0,.6), 0 8px 32px -8px rgba(0,0,0,.4);
+    --shadow-glow:0 0 0 1px rgba(124,156,255,.18), 0 20px 60px -20px rgba(124,156,255,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter','Manrope',system-ui,-apple-system,sans-serif;
+    color:var(--text);
+    background:var(--bg-0);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    line-height:1.5;
+  }
+  /* Ambient gradient background */
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(124,156,255,.18), transparent 60%),
+      radial-gradient(900px 600px at -10% 20%, rgba(157,123,255,.16), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(61,220,151,.10), transparent 60%),
+      linear-gradient(180deg,#07080c 0%, #090b12 100%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  /* Navbar */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(160%) blur(18px);
+    -webkit-backdrop-filter:saturate(160%) blur(18px);
+    background:rgba(8,10,16,.55);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:1240px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.01em}
+  .brand-mark{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;color:#0b0d14;font-weight:800;
+    box-shadow:0 6px 20px -6px rgba(124,156,255,.7);
+  }
+  .brand-title{font-family:'Manrope',sans-serif;font-size:15px}
+  .brand-sub{font-size:11px;color:var(--text-muted);font-weight:500}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    height:40px;padding:0 16px;border-radius:12px;
+    font:inherit;font-size:13px;font-weight:600;color:var(--text);
+    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    cursor:pointer;transition:all .2s ease;white-space:nowrap;
+  }
+  .btn:hover{background:rgba(255,255,255,.08);border-color:var(--border-strong);transform:translateY(-1px)}
+  .btn-primary{
+    background:linear-gradient(135deg, rgba(124,156,255,.18), rgba(157,123,255,.18));
+    border-color:rgba(124,156,255,.35);
+    color:#fff;
+  }
+  .btn-primary:hover{box-shadow:var(--shadow-glow)}
+  .btn .spin{animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .nbu-link{display:block;text-decoration:none;color:inherit}
+
+  /* Layout */
+  main{max-width:1240px;margin:0 auto;padding:56px 24px 80px}
+
+  .hero{text-align:center;margin-bottom:48px;opacity:0;animation:fadeUp .7s .05s forwards}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 12px;border-radius:999px;
+    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    font-size:12px;color:var(--text-dim);margin-bottom:20px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 12px var(--success)}
+  h1{
+    font-family:'Manrope',sans-serif;
+    font-size:clamp(36px,5.5vw,64px);
+    line-height:1.05;letter-spacing:-.03em;font-weight:800;
+    background:linear-gradient(180deg,#fff 0%, #b9c2d6 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .subtitle{margin-top:16px;color:var(--text-dim);font-size:clamp(15px,1.6vw,18px);max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* Currency card */
+  .rates{
+    margin-top:48px;display:grid;grid-template-columns:1.6fr 1fr;gap:20px;
+    opacity:0;animation:fadeUp .7s .15s forwards;
+  }
+  @media (max-width:860px){.rates{grid-template-columns:1fr}}
+  .glass{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:24px;
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    box-shadow:var(--shadow-lg);
+    overflow:hidden;
+  }
+  .glass::before{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,0) 40%);
+  }
+  .rate-card{padding:28px 28px 24px}
+  .rate-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .rate-title{display:flex;align-items:center;gap:12px}
+  .nbu-logo{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,#1a2340,#0f1424);
+    border:1px solid var(--border-strong);
+    display:grid;place-items:center;font-weight:800;font-size:11px;color:#ffd86b;letter-spacing:.05em;
+  }
+  .rate-title h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700}
+  .rate-title p{font-size:12px;color:var(--text-muted)}
+  .rate-date{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+  .rate-date .pulse{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  .rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .rate-item{
+    padding:20px;border-radius:16px;
+    background:rgba(255,255,255,.025);
+    border:1px solid var(--border);
+    position:relative;overflow:hidden;
+    transition:border-color .2s, transform .2s;
+  }
+  .rate-item:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+  .rate-item .ccy{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:13px;font-weight:500;margin-bottom:12px}
+  .flag{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700}
+  .flag-usd{background:linear-gradient(135deg,#1d6f42,#0f3d24);color:#bff5d2}
+  .flag-eur{background:linear-gradient(135deg,#1a3a8f,#0a1f55);color:#cfd9ff}
+  .rate-value{
+    font-family:'Manrope',sans-serif;font-size:34px;font-weight:800;letter-spacing:-.02em;
+    line-height:1;display:flex;align-items:baseline;gap:8px;
+  }
+  .rate-value .uah{font-size:13px;color:var(--text-muted);font-weight:500}
+  .rate-trend{margin-top:10px;font-size:12px;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-weight:600}
+  .trend-up{background:rgba(61,220,151,.12);color:var(--success)}
+  .trend-down{background:rgba(255,107,107,.12);color:var(--danger)}
+  .trend-flat{background:rgba(255,255,255,.06);color:var(--text-muted)}
+  .skeleton{
+    background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));
+    background-size:200% 100%;animation:shimmer 1.4s infinite;
+    border-radius:8px;color:transparent!important;
+  }
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* Tomorrow mini block */
+  .rate-tomorrow{padding:24px;display:flex;flex-direction:column;gap:16px}
+  .rate-tomorrow h4{font-family:'Manrope',sans-serif;font-size:13px;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .rate-tomorrow h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(124,156,255,.15);color:#a8bcff;text-transform:none;letter-spacing:0}
+  .mini-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .mini-row .left{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-dim)}
+  .mini-row .val{font-family:'Manrope',sans-serif;font-weight:700;font-size:16px}
+  .tomorrow-empty{font-size:13px;color:var(--text-muted);text-align:center;padding:20px 0}
+
+  /* Services grid */
+  .section-head{
+    margin:64px 0 24px;display:flex;align-items:end;justify-content:space-between;gap:16px;
+    opacity:0;animation:fadeUp .7s .25s forwards;
+  }
+  .section-head h2{font-family:'Manrope',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.02em}
+  .section-head p{color:var(--text-muted);font-size:13px;margin-top:4px}
+  .count{font-size:12px;color:var(--text-muted);padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  }
+  @media (max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:780px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:500px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    position:relative;display:flex;flex-direction:column;gap:14px;
+    padding:22px;border-radius:20px;
+    background:var(--surface);border:1px solid var(--border);
+    text-decoration:none;color:inherit;cursor:pointer;
+    transition:transform .25s cubic-bezier(.2,.7,.2,1), border-color .25s, box-shadow .25s, background .25s;
+    overflow:hidden;
+    opacity:0;animation:fadeUp .5s forwards;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,0) 50%);
+  }
+  .card::after{
+    content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), rgba(124,156,255,.18), transparent 40%);
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:var(--shadow-glow)}
+  .card:hover::after{opacity:1}
+  .card-icon{
+    width:46px;height:46px;border-radius:13px;
+    display:grid;place-items:center;
+    background:linear-gradient(135deg, rgba(124,156,255,.16), rgba(157,123,255,.10));
+    border:1px solid rgba(124,156,255,.18);
+    color:#cfd9ff;
+  }
+  .card h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .card p{font-size:13px;color:var(--text-muted);line-height:1.5;flex:1}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+  .card-tag{font-size:11px;color:var(--text-muted);padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .card-arrow{
+    width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--text-dim);
+    background:rgba(255,255,255,.04);border:1px solid var(--border);transition:all .25s;
+  }
+  .card:hover .card-arrow{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b0d14;border-color:transparent;transform:translate(2px,-2px)}
+
+  .empty-state{grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-size:14px}
+
+  /* Footer */
+  footer{
+    margin-top:80px;padding:40px 24px 32px;border-top:1px solid var(--border);
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .made{font-family:'Manrope',sans-serif;color:var(--text-dim);margin-top:8px;font-size:12px;letter-spacing:.02em}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .flash-up{animation:flashUp .8s ease}
+  .flash-down{animation:flashDown .8s ease}
+  @keyframes flashUp{0%{box-shadow:0 0 0 0 rgba(61,220,151,.0)}30%{box-shadow:0 0 0 4px rgba(61,220,151,.25)}100%{box-shadow:0 0 0 0 rgba(61,220,151,0)}}
+  @keyframes flashDown{0%{box-shadow:0 0 0 0 rgba(255,107,107,.0)}30%{box-shadow:0 0 0 4px rgba(255,107,107,.25)}100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}}
+
+  /* PrivatBank + converters */
+  .tools{margin-top:28px;display:grid;grid-template-columns:1.6fr 1fr;gap:20px;opacity:0;animation:fadeUp .7s .2s forwards}
+  @media (max-width:860px){.tools{grid-template-columns:1fr}}
+  .pb-card{padding:28px}
+  .pb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+  .pb-title{display:flex;align-items:center;gap:12px}
+  .pb-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#3a8a2e,#1f4a18);border:1px solid var(--border-strong);display:grid;place-items:center;font-weight:800;font-size:11px;color:#bff5d2;letter-spacing:.05em}
+  .pb-title h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700}
+  .pb-title p{font-size:12px;color:var(--text-muted)}
+  .pb-rates{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+  @media (max-width:600px){.pb-rates{grid-template-columns:1fr}}
+  .pb-rate{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .pb-rate .ccy{font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:500}
+  .pb-rate .nums{display:flex;justify-content:space-between;gap:10px;font-family:'Manrope',sans-serif}
+  .pb-rate .lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px}
+  .pb-rate .v{font-size:18px;font-weight:700}
+  .pb-rate .buy .v{color:var(--success)}
+  .pb-rate .sell .v{color:#ffb074}
+  .flag-pln{background:linear-gradient(135deg,#8f1a3a,#5a0a1f);color:#ffcfd9}
+
+  .conv{padding:20px;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .conv-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .tab{flex:1;min-width:90px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text-dim);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+  .tab:hover{border-color:var(--border-strong);color:var(--text)}
+  .tab.active{background:linear-gradient(135deg,rgba(124,156,255,.22),rgba(157,123,255,.22));border-color:rgba(124,156,255,.45);color:#fff;box-shadow:var(--shadow-glow)}
+  .conv-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end;margin-top:14px}
+  @media (max-width:520px){.conv-fields{grid-template-columns:1fr;}.swap{display:none}}
+  .field label{display:block;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600}
+  .field input{
+    width:100%;height:48px;padding:0 14px;border-radius:12px;
+    background:rgba(8,10,16,.6);border:1px solid var(--border);color:var(--text);
+    font:inherit;font-family:'Manrope',sans-serif;font-size:16px;font-weight:500;
+    outline:none;transition:border-color .2s,box-shadow .2s;
+  }
+  .field input:focus{border-color:rgba(124,156,255,.55);box-shadow:0 0 0 3px rgba(124,156,255,.15)}
+  .swap{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text-dim);align-self:center;margin-top:18px}
+  .conv-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px;flex-wrap:wrap}
+  .conv-foot .hint{font-size:12px;color:var(--text-muted)}
+  .conv-foot .hint b{color:var(--text-dim);font-weight:600}
+
+  .ha-card{padding:24px;display:flex;flex-direction:column;gap:14px}
+  .ha-card h4{font-family:'Manrope',sans-serif;font-size:13px;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .ha-card h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(61,220,151,.15);color:#9aeac4;text-transform:none;letter-spacing:0}
+  .ha-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:600px){.ha-fields{grid-template-columns:1fr}}
+
+  /* блок відсотків: на всю ширину, без переносів */
+  .pct-grid{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-top:14px;
+  }
+  .pct-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 20px;
+    border-radius:16px;
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--border);
+    transition:all .2s;
+    width:100%;
+  }
+  .pct-item:hover{
+    border-color:var(--border-strong);
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.05);
+  }
+  .pct-lbl{
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:0;
+    color:var(--text-dim);
+    text-transform:none;
+  }
+  .pct-val{
+    font-family:'Manrope',sans-serif;
+    font-size:24px;
+    font-weight:800;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .pct-1 .pct-val{color:#a8bcff}
+  .pct-5 .pct-val{color:#9aeac4}
+  .pct-18 .pct-val{color:#ffb074}
+  @media (max-width:600px){
+    .pct-val{font-size:20px; white-space:normal; word-break:keep-all;}
+    .pct-item{flex-wrap:wrap; gap:10px;}
+    .pct-lbl{font-size:14px;}
+  }
+
+  /* РІЗНИЦЯ МІЖ ДАТАМИ — повна ширина, адаптив */
+  .fullwidth-date-diff{
+    margin-top:28px;
+    opacity:0;
+    animation:fadeUp .7s .2s forwards;
+  }
+  .fullwidth-glass{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:24px;
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    box-shadow:var(--shadow-lg);
+    overflow:hidden;
+  }
+  .date-diff-card{
+    padding:28px;
+  }
+  .date-diff-card h4{
+    font-family:'Manrope',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:6px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .date-diff-card h4 .badge{
+    font-size:10px;
+    padding:4px 12px;
+    border-radius:999px;
+    background:rgba(124,156,255,.2);
+    color:#a8bcff;
+  }
+  .date-diff-card .sub{
+    font-size:13px;
+    color:var(--text-muted);
+    margin-bottom:20px;
+  }
+  .dd-block{
+    margin-bottom:28px;
+    background:rgba(255,255,255,.02);
+    border-radius:20px;
+    padding:18px;
+    border:1px solid var(--border);
+  }
+  .dd-header{
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-dim);
+    margin-bottom:14px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .dd-row-custom{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    align-items:flex-end;
+  }
+  .dd-date-field{
+    flex:2;
+    min-width:160px;
+  }
+  .dd-ymd-group{
+    flex:3;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    background:rgba(0,0,0,.2);
+    padding:8px 12px;
+    border-radius:16px;
+    align-items:flex-end;
+  }
+  .dd-ymd-group .field{
+    flex:1;
+    min-width:70px;
+  }
+  .dd-today-field{
+    flex:1.5;
+    min-width:140px;
+  }
+  .today-pill{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(124,156,255,.12);
+    border:1px solid rgba(124,156,255,.25);
+    color:#a8bcff;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .dd-today-field .field input{
+    background:rgba(255,255,255,.03);
+    cursor:default;
+    color:var(--text-dim);
+  }
+  @media (max-width:800px){
+    .dd-row-custom{flex-direction:column; gap:16px;}
+    .dd-date-field,.dd-ymd-group,.dd-today-field{width:100%;}
+    .dd-ymd-group{justify-content:space-between;}
+    .dd-ymd-group .field{min-width:0;}
+    .pct-val{white-space:normal; word-break:break-word;}
+  }
+  @media (max-width:480px){
+    .dd-ymd-group{flex-direction:column; gap:10px;}
+    .dd-ymd-group .field input{height:44px;}
+    .date-diff-card{padding:20px;}
+  }
+  .clear-btn-wrap{display:flex; justify-content:flex-end; margin-top:20px;}
+
+  /* APOSTILLE LAYOUT */
+  .apostille-grid{
+    display:grid;
+    grid-template-columns:1fr 1.6fr;
+    gap:20px;
+    margin-top:28px;
+    opacity:0;
+    animation:fadeUp .7s .2s forwards;
+  }
+  @media (max-width:860px){
+    .apostille-grid{grid-template-columns:1fr;}
+  }
+  .apostille-left{
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .apostille-left h3, .apostille-right h3{
+    font-family:'Manrope',sans-serif;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:-.02em;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .country-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-height:420px;
+    overflow-y:auto;
+    padding-right:6px;
+  }
+  .country-link{
+    display:flex;
+    align-items:center;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--border);
+    text-decoration:none;
+    color:var(--text);
+    font-weight:500;
+    font-size:14px;
+    transition:all .2s;
+  }
+  .country-link:hover{
+    background:rgba(124,156,255,.12);
+    border-color:var(--accent);
+    transform:translateX(4px);
+  }
+  .search-apostille{
+    margin-bottom:20px;
+  }
+  .search-apostille input{
+    width:100%;
+    height:44px;
+    padding:0 14px;
+    border-radius:14px;
+    background:rgba(8,10,16,.6);
+    border:1px solid var(--border);
+    color:var(--text);
+    font:inherit;
+    font-size:14px;
+    outline:none;
+    transition:all .2s;
+  }
+  .search-apostille input:focus{
+    border-color:rgba(124,156,255,.55);
+    box-shadow:0 0 0 3px rgba(124,156,255,.15);
+  }
+  .hague-list{
+    max-height:440px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-top:12px;
+  }
+  .hague-item{
+    padding:10px 14px;
+    border-radius:12px;
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-dim);
+    transition:all .15s;
+  }
+  .hague-item span{color:var(--text);font-weight:500;}
+  .empty-hague{
+    text-align:center;
+    padding:32px;
+    color:var(--text-muted);
+    font-size:13px;
+  }
+  .npa-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:16px;
+    margin-top:20px;
+  }
+  .npa-group{
+    background:rgba(255,255,255,.025);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:18px;
+  }
+  .npa-group h4{
+    font-family:'Manrope',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:14px;
+    color:var(--accent);
+    letter-spacing:-.01em;
+    border-left:3px solid var(--accent);
+    padding-left:12px;
+  }
+  .npa-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+    text-decoration:none;
+    color:var(--text-dim);
+    font-size:13px;
+    font-weight:500;
+    transition:all .2s;
+  }
+  .npa-link:hover{color:var(--accent);transform:translateX(4px);}
+  .npa-link span:first-child{flex:1;}
+  .npa-arrow{font-size:14px;opacity:0.6;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <div>
+        <div class="brand-title">Notary Assistant</div>
+        <div class="brand-sub">АРМН</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> АРМН </div>
+    <h1>Dashboard для нотаріусів</h1>
+    <p class="subtitle">Швидкий доступ до сайтів, курсів валют іншого корисного — в одному місці.</p>
+  </section>
+
+  <section class="rates">
+    <div class="glass rate-card">
+      <div class="rate-head">
+        <div class="rate-title">
+          <div class="nbu-logo">НБУ</div>
+          <div>
+            <h3>Курс НБУ на сьогодні</h3>
+            <p id="todayDate">—</p>
+          </div>
+        </div>
+        <div class="rate-date"><span class="pulse"></span><span id="updatedAt">оновлюється...</span></div>
+      </div>
+      <div class="rate-grid">
+        <a class="rate-item nbu-link" href="https://bank.gov.ua/ua/markets/exchangerates" target="_blank" rel="noopener noreferrer" id="usdCard">
+          <div class="ccy"><span class="flag flag-usd">$</span> Долар США · USD</div>
+          <div class="rate-value"><span id="usdRate" class="skeleton">00.0000</span><span class="uah">₴</span></div>
+          <div id="usdTrend" class="rate-trend trend-flat">—</div>
+        </a>
+        <a class="rate-item nbu-link" href="https://bank.gov.ua/ua/markets/exchangerates" target="_blank" rel="noopener noreferrer" id="eurCard">
+          <div class="ccy"><span class="flag flag-eur">€</span> Євро · EUR</div>
+          <div class="rate-value"><span id="eurRate" class="skeleton">00.0000</span><span class="uah">₴</span></div>
+          <div id="eurTrend" class="rate-trend trend-flat">—</div>
+        </a>
+      </div>
+      <div style="margin-top:20px;display:flex;justify-content:flex-end">
+        <button class="btn btn-primary" id="refreshBtn" type="button">
+          <svg id="refreshIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+          Оновити курс
+        </button>
+      </div>
+    </div>
+
+    <div class="glass rate-tomorrow">
+      <h4>Курс на завтра <span class="badge" id="tomorrowDate">—</span></h4>
+      <div id="tomorrowBlock">
+        <div class="mini-row"><div class="left"><span class="flag flag-usd">$</span> USD</div><div class="val skeleton">00.0000</div></div>
+        <div class="mini-row" style="margin-top:10px"><div class="left"><span class="flag flag-eur">€</span> EUR</div><div class="val skeleton">00.0000</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tools">
+    <div class="glass pb-card">
+      <div class="pb-head">
+        <div class="pb-title">
+          <div class="pb-logo">ПБ</div>
+          <div>
+            <h3>Курс ПриватБанк · готівковий</h3>
+            <p>Купівля / продаж на сьогодні</p>
+          </div>
+        </div>
+        <a class="btn" href="https://privatbank.ua/obmin-valiut" target="_blank" rel="noopener noreferrer">privatbank.ua →</a>
+      </div>
+
+      <div class="pb-rates">
+        <div class="pb-rate">
+          <div class="ccy"><span class="flag flag-usd">$</span> USD / UAH</div>
+          <div class="nums">
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbUsdBuy">43.85</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbUsdSell">44.45</span></div>
+          </div>
+        </div>
+        <div class="pb-rate">
+          <div class="ccy"><span class="flag flag-eur">€</span> EUR / UAH</div>
+          <div class="nums">
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbEurBuy">50.80</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbEurSell">51.80</span></div>
+          </div>
+        </div>
+        <div class="pb-rate">
+          <div class="ccy"><span class="flag flag-pln">zł</span> PLN / UAH</div>
+          <div class="nums">
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbPlnBuy">11.60</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbPlnSell">12.14</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conv">
+        <div class="conv-tabs" id="convCcyTabs">
+          <button class="tab active" data-ccy="USD" type="button">USD</button>
+          <button class="tab" data-ccy="EUR" type="button">EUR</button>
+        </div>
+        <div class="conv-tabs" id="convOpTabs">
+          <button class="tab active" data-op="buy" type="button">Купівля</button>
+          <button class="tab" data-op="sell" type="button">Продаж</button>
+        </div>
+        <div class="conv-fields">
+          <div class="field"><label>Гривня (UAH)</label><input id="uahInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+          <div class="swap">⇄</div>
+          <div class="field"><label><span id="ccyLabel">USD</span> (валюта)</label><input id="ccyInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+        </div>
+        <div class="conv-foot"><div class="hint">Курс: <b id="curRateLabel">43.80 ₴ за 1 USD</b></div><button class="btn" id="clearBtn" type="button">Очистити</button></div>
+      </div>
+    </div>
+
+    <div class="glass ha-card">
+      <h4>Конвертер площі <span class="badge">1 га = 10 000 м²</span></h4>
+      <p style="font-size:13px;color:var(--text-muted)">Введіть значення в будь-яке поле — друге порахується автоматично (точність до 6 знаків).</p>
+      <div class="ha-fields">
+        <div class="field"><label>Гектари (га)</label><input id="haInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+        <div class="field"><label>Метри квадратні (м²)</label><input id="m2Input" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn" id="haClearBtn" type="button">Очистити</button></div>
+    </div>
+  </section>
+
+  <!-- Блок відсотків (переміщено наверх, з новим дизайном на всю ширину) -->
+  <section class="tools" style="margin-top:28px;">
+    <div class="glass calc-card" style="padding:28px;">
+      <h4 style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;">Відсотки від суми <span class="badge" style="background:rgba(124,156,255,.15);color:#a8bcff;">1% · 5% · 18%</span></h4>
+      <p class="sub" style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Введіть суму — копійки автоматично, кома як роздільник, пробіли в тисячах.</p>
+      <div class="field"><label>Сума (₴)</label><input id="pctSum" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off"></div>
+      <div class="pct-grid">
+        <div class="pct-item pct-1"><div class="pct-lbl">1% від суми</div><div class="pct-val" id="pct1">0,00</div></div>
+        <div class="pct-item pct-5"><div class="pct-lbl">5% від суми</div><div class="pct-val" id="pct5">0,00</div></div>
+        <div class="pct-item pct-18"><div class="pct-lbl">18% від суми</div><div class="pct-val" id="pct18">0,00</div></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" id="pctClearBtn" type="button">Очистити</button></div>
+    </div>
+  </section>
+
+  <!-- РОЗРАХУНОК ВІКУ ЛЮДИНИ -->
+  <section class="fullwidth-date-diff">
+    <div class="fullwidth-glass date-diff-card">
+      <h4>Розрахунок віку людини <span class="badge">авто</span></h4>
+      <p class="sub">Введіть дату народження цифрами (напр. 01081998) — крапки поставляться автоматично.</p>
+      <div class="dd-block">
+        <div class="dd-row-custom">
+          <div class="dd-date-field"><div class="field"><label>Дата народження</label><input id="ageBirth" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+          <div class="dd-ymd-group">
+            <div class="field"><label>Років</label><input id="ageY" type="text" readonly placeholder="0"></div>
+            <div class="field"><label>Місяців</label><input id="ageM" type="text" readonly placeholder="0"></div>
+            <div class="field"><label>Днів</label><input id="ageD" type="text" readonly placeholder="0"></div>
+          </div>
+        </div>
+        <div class="dd-row-custom" style="margin-top:16px;">
+          <div class="dd-date-field"><div class="field"><label>Коли виповнилося 25 років</label><input id="age25" type="text" readonly placeholder="дд.мм.рррр"></div></div>
+          <div class="dd-date-field"><div class="field"><label>Коли виповнилося 45 років</label><input id="age45" type="text" readonly placeholder="дд.мм.рррр"></div></div>
+        </div>
+      </div>
+      <div class="clear-btn-wrap"><button class="btn" id="ageClearBtn" type="button">Очистити</button></div>
+    </div>
+  </section>
+
+  <!-- РІЗНИЦЯ МІЖ ДАТАМИ — ПОЛНАЯ ШИРИНА (full-width) -->
+  <section class="fullwidth-date-diff">
+    <div class="fullwidth-glass date-diff-card">
+      <h4>Різниця між датами <span class="badge">авто</span></h4>
+      <p class="sub">Введіть дату цифрами (напр. 13052026) — крапки поставляться автоматично. Підтримка форматів: 13.5.2026 / 13/05/2026. Поля років/місяців/днів синхронізуються в обидва боки.</p>
+
+      <div class="dd-block">
+        <div class="dd-header"><span>📅 Перша дата → Сьогодні</span></div>
+        <div class="dd-row-custom">
+          <div class="dd-date-field"><div class="field"><label>Перша дата</label><input id="ddDate1" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+          <div class="dd-ymd-group"><div class="field"><label>Років</label><input id="ddY1" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Місяців</label><input id="ddM1" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Днів</label><input id="ddD1" type="text" inputmode="numeric" placeholder="0"></div></div>
+          <div class="dd-today-field"><div><span class="today-pill">сьогодні</span></div><div class="field"><label>Поточна дата</label><input id="ddToday1" type="text" readonly></div></div>
+        </div>
+      </div>
+
+      <div class="dd-block">
+        <div class="dd-header"><span>📅 Сьогодні → Третя дата</span></div>
+        <div class="dd-row-custom">
+          <div class="dd-today-field"><div><span class="today-pill">сьогодні</span></div><div class="field"><label>Поточна дата</label><input id="ddToday2" type="text" readonly></div></div>
+          <div class="dd-ymd-group"><div class="field"><label>Років</label><input id="ddY2" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Місяців</label><input id="ddM2" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Днів</label><input id="ddD2" type="text" inputmode="numeric" placeholder="0"></div></div>
+          <div class="dd-date-field"><div class="field"><label>Третя дата</label><input id="ddDate2" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+        </div>
+      </div>
+      <div class="clear-btn-wrap"><button class="btn" id="ddClearBtn" type="button">Очистити всі дати</button></div>
+    </div>
+  </section>
+
+  <!-- РІЗНИЦЯ ЧАСУ МІЖ ДВОМА ДОВІЛЬНИМИ ДАТАМИ -->
+  <section class="fullwidth-date-diff">
+    <div class="fullwidth-glass date-diff-card">
+      <h4>Різниця часу між датами <span class="badge">авто · 2-сторонньо</span></h4>
+      <p class="sub">Введіть будь-які дві дати — порахуються роки/місяці/дні. Або введіть ліву дату та значення Р/М/Д — обчислиться права дата.</p>
+      <div class="dd-block">
+        <div class="dd-row-custom">
+          <div class="dd-date-field"><div class="field"><label>Дата (ліворуч)</label><input id="rgLeft" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+          <div class="dd-ymd-group">
+            <div class="field"><label>Років</label><input id="rgY" type="text" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>Місяців</label><input id="rgM" type="text" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>Днів</label><input id="rgD" type="text" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div class="dd-date-field"><div class="field"><label>Дата (праворуч)</label><input id="rgRight" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+        </div>
+      </div>
+      <div class="clear-btn-wrap"><button class="btn" id="rgClearBtn" type="button">Очистити</button></div>
+    </div>
+  </section>
+
+  <!-- НОВИЙ БЛОК АПОСТИЛЬ (ліва частина - договори, права частина - Гаага + пошук) з file2.html -->
+  <section class="apostille-grid">
+    <!-- Ліва: Країни з договорами про правову допомогу (без апостиля) -->
+    <div class="glass apostille-left">
+      <h3>📜 Прийом документів БЕЗ апостиля</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">Країни, з якими укладено договори про правову допомогу (посилання на договори).</p>
+      <div class="country-list" id="legalAidCountries"></div>
+    </div>
+    <!-- Права: Гаазька конвенція + пошук -->
+    <div class="glass apostille-left" style="padding:24px;">
+      <h3>🌍 Гаазька конвенція (Апостиль)</h3>
+      <div class="search-apostille"><input type="text" id="hagueSearch" placeholder="Пошук країни... (наприклад, Франція, Німеччина)" autocomplete="off"></div>
+      <div id="hagueListContainer" class="hague-list"></div>
+    </div>
+  </section>
+
+  <!-- Сервіси та реєстри  -->
+  <div class="section-head"><div><h2>Сервіси та реєстри</h2><p>Усі робочі інструменти — в один клік.</p></div></div>
+  <div class="grid" id="grid"></div>
+
+  <!-- БЛОК НПА (НОРМАТИВНІ АКТИ) -->
+  <div class="section-head"><div><h2>📚 Корисні НПА для нотаріуса</h2><p> Посилання на законодавчі акти </p></div></div>
+  <div class="glass" style="padding:24px;">
+    <div class="npa-grid" id="npaGrid"></div>
+  </div>
+</main>
+
+<footer><div>© <span id="year"></span> Notary Assistant версія від 26.05.2026 — АРМН </div><div class="made">Створено з повагою</div></footer>
+
+<script>
+  // ----- сервіси -----
+  const baseServices = [
+    { name: "ДРРП", desc: "Державний реєстр речових прав на нерухоме майно", url: "https://register.minjust.gov.ua/models/adminui-vue/views/ub-auth.html", tag: "Мін'юст", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/></svg>` },
+    { name: "NotaryPay", desc: "Платіжна система для нотаріусів", url: "https://notarypay.com.ua/login", tag: "Платежі", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 11h20"/></svg>` },
+    { name: "Земельний кадастр", desc: "Публічна кадастрова карта України", url: "https://e.land.gov.ua/auth_select", tag: "Кадастр", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15"/></svg>` },
+    { name: "ФДМУ Оцінка", desc: "Єдина база звітів про оцінку майна", url: "https://evaluation.spfu.gov.ua/main", tag: "ФДМУ", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>` },
+    { name: "Приват24", desc: "Інтернет-банкінг ПриватБанк", url: "https://next.privat24.ua", tag: "Банк", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10 12 3l9 7"/><path d="M5 10v10h14V10"/></svg>` },
+    { name: "Приват24 Бізнес", desc: "ПриватБанк 24 для бізнесу", url: "https://otp24.privatbank.ua", tag: "Платежі", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="3"/></svg>` },
+    { name: "Реєстр боржників", desc: "Єдиний реєстр боржників", url: "https://erb.minjust.gov.ua/#/search-debtors", tag: "боржники", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/></svg>` },
+    { name: "Санкції РНБО", desc: "Реєстр санкцій РНБО України", url: "https://drs.nsdc.gov.ua/extract", tag: "РНБО", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg>` },
+    { name: "РАЦС", desc: "Реєстр актів цивільного стану.", url: "https://regdracs.minjust.gov.ua/login", tag: "РАЦС", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16"/><path d="M8 8h8"/><path d="M8 12h8"/></svg>` },
+    { name: "ЄДР", desc: "Єдиний державний реєстр юр.осіб та ФОП.", url: "https://usrreg.minjust.gov.ua/login", tag: "ЄДР", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-6 9 6v9l-9 6-9-6z"/><path d="M9 22v-8h6v8"/></svg>` },
+    { name: "Онлайн калькулятор", desc: "Розрахунок вартості нотаріальних послуг.", url: "https://calc-49ke.onrender.com", tag: "Калькулятор", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 10h8"/></svg>` },
+    { name: "Ідентифікатори", desc: "Перевірка ідентифікаторів в кабінеті ЄДЕССБ.", url: "https://admin.e-construction.gov.ua/dashboard", tag: "Ідентифікація", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83"/></svg>` },
+    { name: "ЄДЕССБ сайт", desc: "Пошук документів у сфері будівництва", url: "https://e-construction.gov.ua", tag: "Будівництво", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-6 9 6v9l-9 6-9-6z"/><path d="M9 12l2 2 4-4"/></svg>` },
+    { name: "Перевірка коду", desc: "Перевірка дати народження щодо РНОКПП.", url: "https://ind-kod.org.ua/ua/", tag: "РНОКПП", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>` },
+    { name: "Пошук недійсних документів ДМС", desc: "Перевірка за базою недійсних документів.", url: "https://dmsu.gov.ua/services/nd.html", tag: "ДМС", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M12 12v4"/></svg>` },
+    { name: "Пошук викрадених документів МВС", desc: "Сервіс пошуку паспорту серед втрачених або викрадених.", url: "https://search-passport.mvs.gov.ua", tag: "МВС", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7"/></svg>` },
+    // ДОДАНІ 4 нові кнопки з file2.html
+    { name: "Електронний реєстр апостилів", desc: "Подача та оформлення заяв на проставлення апостилю", url: "https://era.minjust.gov.ua/login", tag: "апостиль", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>` },
+    { name: "РАЦС", desc: "Державний реєстр актів цивільного стану громадян", url: "https://regdracs.minjust.gov.ua/login", tag: "загс", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h8"/></svg>` },
+    { name: "кабінет нотаріуса ощадбанк", desc: "Подання запитів до ОЩАДбанку по спадщині", url: "https://pkb.oschadbank.ua/login", tag: "ощад спадщина", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18v12H3z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>` },
+    { name: "Автоматизоване робоче місце нотаріуса", desc: "Реєстрація акаунту в системі АРМН та доступ до програм", url: "https://passport-reader-web.onrender.com", tag: "АРМН", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/><path d="M12 12v4"/><path d="M12 8h.01"/></svg>` }
+  ];
+  const services = [...baseServices];
+  const gridContainer = document.getElementById('grid');
+  function renderGrid() {
+    gridContainer.innerHTML = "";
+    services.forEach((s, i) => {
+      const a = document.createElement('a'); a.className = 'card'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.style.animationDelay = (0.05 * i + 0.3) + 's';
+      a.innerHTML = `<div class="card-icon">${s.icon}</div><h3>${s.name}</h3><p>${s.desc}</p><div class="card-foot"><span class="card-tag">${s.tag}</span><span class="card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span></div>`;
+      a.addEventListener('mousemove', (e) => { const r = a.getBoundingClientRect(); a.style.setProperty('--mx', (e.clientX - r.left) + 'px'); a.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+      gridContainer.appendChild(a);
+    });
+  }
+  renderGrid();
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---- КРАЇНИ ДЛЯ ЛІВОГО СПИСКУ (договори правової допомоги) + ----
+  const legalCountries = [
+    "Болгарія","Грузія","Естонія","Латвія","Литва","Македонія","Молдова","Польща","Румунія","Узбекистан","Чехія"
+  ];
+  const tempLink = "https://0975085679.site/notarius.html";
+  const leftContainer = document.getElementById('legalAidCountries');
+  leftContainer.innerHTML = legalCountries.map(c => `<a href="${tempLink}" target="_blank" class="country-link" data-country="${c}">📌 ${c}</a>`).join('');
+
+  // ---- СПИСОК ГААЗЬКОЇ КОНВЕНЦІЇ  ----
+  const hagueCountriesRaw = [
+    "Австралія (Австралійський Союз)","Австрія (Республіка Австрія)","Азербайджан (Азербайджанська Республіка)","Албанія (Республіка Албанія)","Андорра (Князівство Андорра)","Антигуа і Барбуда","Аргентина (Аргентинська Республіка)","Багами (Співдружність Багамських островів)","Бангладеш (Народна Республіка Бангладеш) – з 30.03.2025","Барбадос","Бахрейн (Королівство Бахрейн)","Беліз","Бельгія (Королівство Бельгія)","Білорусь (Республіка Білорусь)","Болгарія (Республіка Болгарія)","Болівія (Багатонаціональна Держава Болівія)","Боснія і Герцеговина","Ботсвана (Республіка Ботсвана)","Бразилія (Федеративна Республіка Бразилія)","Бруней (Держава Бруней-Даруссалам)","Бурунді (Республіка Бурунді)","Вануату (Республіка Вануату)","Венесуела (Венесуела (Боліварська Республіка))","Вірменія (Республіка Вірменія)","Гайана (Кооперативна Республіка Гайана)","Гватемала (Республіка Гватемала)","Гондурас (Республіка Гондурас)","Гренада","Греція (Грецька Республіка)","Грузія: Не поширюється на Абхазію та Південну Осетію","Данія (Королівство Данія): Не поширюється на Гренландію","Домініка (Співдружність Домініки)","Домініканська Республіка","Еквадор (Республіка Еквадор)","Естонія (Естонська Республіка)","Ізраїль (Держава Ізраїль)","Індія (Республіка Індія)","Індонезія (Республіка Індонезія)","Ірландія (Республіка Ірландія)","Ісландія","Іспанія (Королівство Іспанія)","Італія (Італійська Республіка)","Кабо-Верде (Республіка Кабо-Верде)","Казахстан (Республіка Казахстан)","Канада","Киргизстан (Киргизька Республіка)","Китай (Китайська Народна Республіка) – (Гонконг, Макао)","Кіпр (Республіка Кіпр)","Колумбія (Республіка Колумбія)","Королівство Есватіні","Королівство Нідерландів","Косово (Республіка Косово)","Коста-Рика (Республіка Коста-Рика)","Латвія (Латвійська Республіка)","Лесото (Королівство Лесото)","Литва (Литовська Республіка)","Ліберія (Республіка Ліберія)","Ліхтенштейн (Князівство Ліхтенштейн)","Люксембург (Велике Герцогство Люксембург)","Маврикій (Республіка Маврикій)","Малаві (Республіка Малаві)","Мальта (Республіка Мальта)","Марокко (Королівство Марокко)","Маршалові Острови (Республіка Маршалові Острови)","Мексика (Мексиканські Сполучені Штати)","Молдова (Республіка Молдова)","Монако (Князівство Монако)","Монголія","Намібія (Республіка Намібія)","Нікарагуа (Республіка Нікарагуа)","Німеччина (Федеративна Республіка Німеччина)","Ніуе","Нова Зеландія (не пошир. на Токелау)","Норвегія (Королівство Норвегія)","Оман (Султанат Оман)","Острови Кука","Пакистан (Ісламська Республіка Пакистан)","Палау (Республіка Палау)","Панама (Республіка Панама)","Парагвай (Республіка Парагвай)","Перу (Республіка Перу)","Південна Корея (Республіка Корея)","Південно-Африканська Республіка (ПАР)","Північна Македонія (Республіка Північна Македонія)","Польща (Республіка Польща)","Португалія (Португальська Республіка)","Росія (Російська Федерація)","Руанда (Руандійська Республіка)","Румунія","Сальвадор (Республіка Ель-Сальвадор)","Самоа (Незалежна Держава Самоа)","Сан-Марино (Найясніша Республіка Сан-Марино)","Сан-Томе і Принсіпі","Саудівська Аравія (Королівство Саудівська Аравія)","Сейшельські острови (Республіка Сейшельські острови)","Сенегал (Республіка Сенегал)","Сент-Вінсент і Гренадіни","Сент-Кітс і Невіс (Федерація)","Сент-Люсія","Сербія (Республіка Сербія)","Сінгапур (Республіка Сінгапур)","Словаччина (Словацька Республіка)","Словенія (Республіка Словенія)","Сполучене Королівство Великобританії","Сполучені Штати Америки","Суринам (Республіка Суринам)","Таджикистан (Республіка Таджикистан)","Тонга (Королівство Тонга)","Тринідад і Тобаго (Республіка)","Туніс (Туніська Республіка)","Туреччина (Турецька Республіка)","Угорщина","Узбекистан (Республіка Узбекистан)","Україна (Не поширюється на тимчасово окуповані території)","Уругвай (Східна Республіка Уругвай)","Фіджі (Республіка Фіджі)","Філіппіни (Республіка Філіппіни)","Фінляндія (Фінляндська Республіка)","Франція (Французька Республіка)","Хорватія (Республіка Хорватія)","Чехія (Чеська Республіка)","Чилі (Республіка Чилі)","Чорногорія","Швейцарія (Швейцарська Конфедерація)","Швеція (Королівство Швеція)","Ямайка","Японія (Японська Держава)"
+  ];
+  function renderHagueList(filter = "") {
+    const filtered = hagueCountriesRaw.filter(c => c.toLowerCase().includes(filter.toLowerCase()));
+    const container = document.getElementById('hagueListContainer');
+    if(filtered.length === 0){ container.innerHTML = `<div class="empty-hague">😔 Країн не знайдено</div>`; return; }
+    container.innerHTML = filtered.map(c => `<div class="hague-item">🌐 <span>${c}</span></div>`).join('');
+  }
+  const hagueSearch = document.getElementById('hagueSearch');
+  hagueSearch.addEventListener('input', (e) => renderHagueList(e.target.value));
+  renderHagueList("");
+
+  // ---- НПА (групи з посиланнями з file2.html) ----
+  const npaGroups = [
+    { title: "Нотаріальні НПА", items: [
+      { name: "Закон \"Про Нотаріат\"", url: "https://zakon.rada.gov.ua/laws/show/3425-12#Text" },
+      { name: "Порядок вчинення дій", url: "https://zakon.rada.gov.ua/laws/show/z0282-12#Text" },
+      { name: "Правила ведення діловодства", url: "https://zakon.rada.gov.ua/laws/show/z1318-10#Text" }
+    ]},
+    { title: "Кодекси", items: [
+      { name: "Цивільний кодекс", url: "https://zakon.rada.gov.ua/laws/show/435-15#Text" },
+      { name: "Сімейний кодекс", url: "https://zakon.rada.gov.ua/laws/show/2947-14#Text" }
+    ]},
+    { title: "Оцінка та тех. інвентаризація", items: [
+      { name: "Наказ ФДМУ щодо оцінок", url: "https://zakon.rada.gov.ua/laws/show/z0677-18#Text" },
+      { name: "Інструкція щодо тех. інвентаризації", url: "https://zakon.rada.gov.ua/laws/show/488-2023-п#n14" }
+    ]},
+    { title: "Державні програми", items: [
+      { name: "Сертифікати, пост. №600", url: "https://zakon.rada.gov.ua/laws/show/600-2023-п/ed20240119#Text" },
+      { name: "Зміни до №600, пост. №39", url: "https://zakon.rada.gov.ua/laws/show/39-2024-п#Text" },
+      { name: "Ваучери, пост. №1176", url: "https://zakon.rada.gov.ua/laws/show/1176-2025-п#Text" }
+    ]}
+  ];
+  const npaGrid = document.getElementById('npaGrid');
+  npaGrid.innerHTML = npaGroups.map(group => `
+    <div class="npa-group">
+      <h4>${group.title}</h4>
+      ${group.items.map(it => `<a href="${it.url}" target="_blank" class="npa-link"><span>📘 ${it.name}</span><span class="npa-arrow">→</span></a>`).join('')}
+    </div>
+  `).join('');
+
+  // ---- Відновлення всіх скриптів (конвертер, НБУ, площі, відсотки, дати)  ----
+  (function restoreUtilities(){
+    // НБУ курси
+    const ymd = d => `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    const formatDate = d => d.toLocaleDateString('uk-UA',{day:'2-digit',month:'long',year:'numeric'});
+    const formatTime = d => d.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'});
+    let prev = { USD: null, EUR: null };
+    async function fetchRate(code, date){ const url = `https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=${code}&date=${ymd(date)}&json`; const r = await fetch(url, { cache:'no-store' }); if(!r.ok) throw new Error(); const data = await r.json(); return data && data[0] ? data[0] : null; }
+    function setRate(elId, trendId, cardId, value, prevValue){
+      const el=document.getElementById(elId); const trend=document.getElementById(trendId); const card=document.getElementById(cardId);
+      if(el) el.classList.remove('skeleton'); if(el) el.textContent = Number(value).toFixed(4);
+      if(prevValue!=null){ const diff=value-prevValue; const arrow=diff>0?'▲':diff<0?'▼':'—'; if(trend){ trend.className='rate-trend '+(diff>0?'trend-up':diff<0?'trend-down':'trend-flat'); trend.textContent=`${arrow} ${diff>=0?'+':''}${diff.toFixed(4)} (${((diff/prevValue)*100).toFixed(2)}%)`; if(diff!==0 && card) card.classList.add(diff>0?'flash-up':'flash-down'); setTimeout(()=>{if(card)card.classList.remove('flash-up','flash-down');},900); } }
+      else if(trend){ trend.className='rate-trend trend-flat'; trend.textContent='НБУ · офіційний'; }
+    }
+    function setTomorrow(usd, eur, date){ const block=document.getElementById('tomorrowBlock'); const badge=document.getElementById('tomorrowDate'); if(!usd && !eur){ if(badge)badge.textContent='—'; if(block)block.innerHTML='<div class="tomorrow-empty">Курс на завтра ще не опубліковано</div>'; return; } if(badge)badge.textContent=date.toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit'}); if(block)block.innerHTML=`<div class="mini-row"><div class="left"><span class="flag flag-usd">$</span> USD</div><div class="val">${usd ? Number(usd).toFixed(4) : '—'} ₴</div></div><div class="mini-row" style="margin-top:10px"><div class="left"><span class="flag flag-eur">€</span> EUR</div><div class="val">${eur ? Number(eur).toFixed(4) : '—'} ₴</div></div>`; }
+    async function loadRates(){ try{ const today=new Date(); const tomorrow=new Date(); tomorrow.setDate(today.getDate()+1); if(document.getElementById('todayDate')) document.getElementById('todayDate').textContent=formatDate(today); const [usdT,eurT]=await Promise.all([fetchRate('USD',today),fetchRate('EUR',today)]); if(usdT) setRate('usdRate','usdTrend','usdCard',usdT.rate,prev.USD); if(eurT) setRate('eurRate','eurTrend','eurCard',eurT.rate,prev.EUR); if(usdT) prev.USD=usdT.rate; if(eurT) prev.EUR=eurT.rate; const [usdN,eurN]=await Promise.all([fetchRate('USD',tomorrow),fetchRate('EUR',tomorrow)]); const sameAsToday=(usdN && usdT && usdN.exchangedate===usdT.exchangedate); if(sameAsToday) setTomorrow(null,null,tomorrow); else setTomorrow(usdN?usdN.rate:null,eurN?eurN.rate:null,tomorrow); if(document.getElementById('updatedAt')) document.getElementById('updatedAt').textContent='оновлено '+formatTime(new Date()); }catch(e){ console.error(e); if(document.getElementById('updatedAt')) document.getElementById('updatedAt').textContent='помилка'; } }
+    const refreshBtn=document.getElementById('refreshBtn'); if(refreshBtn) refreshBtn.addEventListener('click',loadRates); loadRates(); setInterval(loadRates,4*60*1000);
+    // площі
+    const haInp=document.getElementById('haInput'), m2Inp=document.getElementById('m2Input');
+    const parseNum=v=>{const s=String(v).replace(/\s+/g,'').replace(',','.'); return s===''?NaN:Number(s);};
+    const formatM2=v=>{if(isNaN(v)) return ''; if(Number.isInteger(v)) return v.toString(); let r=v.toFixed(2).replace(/\.?0+$/,''); return r===''?'0':r;};
+    const formatH=v=>{if(isNaN(v)) return ''; let f=v.toFixed(6).replace(/\.?0+$/,''); return f===''?'0':f;};
+    if(haInp && m2Inp){ haInp.addEventListener('input',()=>{const v=parseNum(haInp.value); if(isFinite(v)) m2Inp.value=formatM2(v*10000); else m2Inp.value='';});
+    m2Inp.addEventListener('input',()=>{const v=parseNum(m2Inp.value); if(isFinite(v)) haInp.value=formatH(v/10000); else haInp.value='';});
+    document.getElementById('haClearBtn')?.addEventListener('click',()=>{haInp.value='';m2Inp.value='';haInp.focus();});}
+    // конвертор Приват
+    const PB_RATES={USD:{buy:43.80,sell:44.40},EUR:{buy:50.80,sell:51.80}}; let convState={ccy:'USD',op:'buy'};
+    const uahI=document.getElementById('uahInput'),ccyI=document.getElementById('ccyInput'),ccyL=document.getElementById('ccyLabel'),curRateL=document.getElementById('curRateLabel');
+    const parseC=v=>{const s=String(v).replace(/\s+/g,'').replace(',','.'); return s===''?NaN:Number(s);}; const fmtC=n=>{if(!isFinite(n))return ''; return n.toFixed(2).replace(/\.?0+$/,'')||'0';};
+    function currentRate(){return PB_RATES[convState.ccy][convState.op];}
+    function updateRateLabel(){if(ccyL)ccyL.textContent=convState.ccy; if(curRateL)curRateL.textContent=`${currentRate().toFixed(2)} ₴ за 1 ${convState.ccy} · ${convState.op==='buy'?'купівля':'продаж'}`;}
+    function recalcU(){const v=parseC(uahI?.value); if(ccyI)ccyI.value=isFinite(v)?fmtC(v/currentRate()):'';}
+    function recalcC(){const v=parseC(ccyI?.value); if(uahI)uahI.value=isFinite(v)?fmtC(v*currentRate()):'';}
+    let last='uah'; if(uahI && ccyI){ uahI.addEventListener('input',()=>{last='uah'; recalcU();}); ccyI.addEventListener('input',()=>{last='ccy'; recalcC();});}
+    function bindTabs(containerId,key){ const wrap=document.getElementById(containerId); if(!wrap)return; wrap.querySelectorAll('.tab').forEach(btn=>{btn.addEventListener('click',()=>{wrap.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); convState[key]=btn.dataset[key==='ccy'?'ccy':'op']; updateRateLabel(); if(last==='uah') recalcU(); else recalcC();});});}
+    bindTabs('convCcyTabs','ccy'); bindTabs('convOpTabs','op'); updateRateLabel();
+    document.getElementById('clearBtn')?.addEventListener('click',()=>{if(uahI && ccyI){uahI.value='';ccyI.value='';uahI.focus();}});
+    // відсотки
+    const pctSum=document.getElementById('pctSum'), out1=document.getElementById('pct1'), out5=document.getElementById('pct5'), out18=document.getElementById('pct18');
+    function parseSum(v){if(!v)return NaN; const s=String(v).replace(/\s+/g,'').replace(/\./g,','); const m=s.match(/^(\d+)(?:,(\d*))?$/); if(!m)return NaN; const intPart=m[1], decPart=(m[2]||'').slice(0,2); return Number(intPart+'.'+(decPart||'0'));}
+    function fmtMoney(n){if(!isFinite(n))return '0,00'; const fixed=n.toFixed(2); const [i,d]=fixed.split('.'); const withSpaces=i.replace(/\B(?=(\d{3})+(?!\d))/g,' '); return `${withSpaces},${d}`;}
+    function formatLiveInput(raw){if(!raw) return ''; let s=raw.replace(/\./g,',').replace(/[^\d,]/g,''); const first=s.indexOf(','); if(first!==-1) s=s.slice(0,first+1)+s.slice(first+1).replace(/,/g,''); let [intPart,decPart]=s.split(','); intPart=intPart.replace(/^0+(?=\d)/,'')||'0'; intPart=intPart.replace(/\B(?=(\d{3})+(?!\d))/g,' '); if(decPart!==undefined){ decPart=decPart.slice(0,2); return intPart+','+decPart; } return intPart; }
+    function recalcPct(){ const v=parseSum(pctSum?.value); if(!isFinite(v)){ if(out1)out1.textContent='0,00'; if(out5)out5.textContent='0,00'; if(out18)out18.textContent='0,00'; return; } if(out1)out1.textContent=fmtMoney(v*0.01); if(out5)out5.textContent=fmtMoney(v*0.05); if(out18)out18.textContent=fmtMoney(v*0.18); }
+    if(pctSum){ pctSum.addEventListener('input',()=>{ const caret=pctSum.selectionStart===pctSum.value.length; pctSum.value=formatLiveInput(pctSum.value); if(caret) pctSum.setSelectionRange(pctSum.value.length,pctSum.value.length); recalcPct(); }); pctSum.addEventListener('blur',()=>{ const v=parseSum(pctSum.value); if(isFinite(v)) pctSum.value=fmtMoney(v); recalcPct(); }); recalcPct(); }
+    document.getElementById('pctClearBtn')?.addEventListener('click',()=>{if(pctSum){pctSum.value=''; recalcPct(); pctSum.focus();}});
+    // ДАТИ (повна ширина, ті самі ID з file1.html)
+    const pad=n=>String(n).padStart(2,'0');
+    const todayFn=()=>{ const d=new Date(); d.setHours(0,0,0,0); return d; };
+    const fmtDateOnly=d=>`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`;
+    function normalizeDateInput(raw){ if(!raw) return ''; let s=String(raw).trim(); let parts=s.split(/[.\/\-\s]+/).filter(Boolean); if(parts.length===3){ let [d,m,y]=parts; if(d.length===1) d='0'+d; if(m.length===1) m='0'+m; if(y.length===2) y='20'+y; return `${d}.${m}.${y}`; } const digits=s.replace(/\D/g,''); if(digits.length===8) return `${digits.slice(0,2)}.${digits.slice(2,4)}.${digits.slice(4,8)}`; if(digits.length===6) return `${digits.slice(0,2)}.${digits.slice(2,4)}.20${digits.slice(4,6)}`; return s; }
+    function parseDate(str){ const norm=normalizeDateInput(str); const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(norm); if(!m) return null; const d=+m[1], mo=+m[2], y=+m[3]; if(mo<1||mo>12||d<1||d>31||y<1900||y>3000) return null; const dt=new Date(y,mo-1,d); if(dt.getDate()!==d||dt.getMonth()!==mo-1||dt.getFullYear()!==y) return null; dt.setHours(0,0,0,0); return dt; }
+    function diffYMD(earlier,later){ let sign=1; if(later<earlier){ const t=earlier; earlier=later; later=t; sign=-1; } let y=later.getFullYear()-earlier.getFullYear(); let m=later.getMonth()-earlier.getMonth(); let d=later.getDate()-earlier.getDate(); if(d<0){ m-=1; const prev=new Date(later.getFullYear(),later.getMonth(),0); d+=prev.getDate(); } if(m<0){ y-=1; m+=12; } return { y:y*sign, m:m*sign, d:d*sign }; }
+    function addYMD(base,y,m,d){ const dt=new Date(base.getFullYear()+y, base.getMonth()+m, base.getDate()+d); dt.setHours(0,0,0,0); return dt; }
+    const ddDate1=document.getElementById('ddDate1'), ddDate2=document.getElementById('ddDate2'), ddToday1=document.getElementById('ddToday1'), ddToday2=document.getElementById('ddToday2'), ddY1=document.getElementById('ddY1'), ddM1=document.getElementById('ddM1'), ddD1=document.getElementById('ddD1'), ddY2=document.getElementById('ddY2'), ddM2=document.getElementById('ddM2'), ddD2=document.getElementById('ddD2');
+    function refreshToday(){ const t=todayFn(); if(ddToday1) ddToday1.value=fmtDateOnly(t); if(ddToday2) ddToday2.value=fmtDateOnly(t); }
+    refreshToday(); setInterval(refreshToday,60000);
+    let lock=false;
+    function setFields(yEl,mEl,dEl,ymd){ if(yEl) yEl.value=ymd.y; if(mEl) mEl.value=ymd.m; if(dEl) dEl.value=ymd.d; }
+    function clearFields(yEl,mEl,dEl){ if(yEl) yEl.value=''; if(mEl) mEl.value=''; if(dEl) dEl.value=''; }
+    function recalcPair1FromDate(){ const d1=parseDate(ddDate1?.value); if(!d1){ clearFields(ddY1,ddM1,ddD1); return; } const t=todayFn(); const r=diffYMD(d1,t); setFields(ddY1,ddM1,ddD1,r); }
+    function recalcPair1FromYMD(){ const y=parseInt(ddY1?.value||'0',10)||0, m=parseInt(ddM1?.value||'0',10)||0, d=parseInt(ddD1?.value||'0',10)||0; const t=todayFn(); const newD=addYMD(t,-y,-m,-d); lock=true; if(ddDate1) ddDate1.value=fmtDateOnly(newD); lock=false; }
+    function recalcPair2FromDate(){ const d2=parseDate(ddDate2?.value); if(!d2){ clearFields(ddY2,ddM2,ddD2); return; } const t=todayFn(); const r=diffYMD(t,d2); setFields(ddY2,ddM2,ddD2,r); }
+    function recalcPair2FromYMD(){ const y=parseInt(ddY2?.value||'0',10)||0, m=parseInt(ddM2?.value||'0',10)||0, d=parseInt(ddD2?.value||'0',10)||0; const t=todayFn(); const newD=addYMD(t,y,m,d); lock=true; if(ddDate2) ddDate2.value=fmtDateOnly(newD); lock=false; }
+    function bindDateInput(el, onChange){ if(!el) return; el.addEventListener('input',()=>{ if(lock) return; const digits=el.value.replace(/\D/g,''); if(/^\d+$/.test(el.value.trim())&&digits.length>=5){ let v=digits.slice(0,8); if(v.length>=5) v=v.slice(0,2)+'.'+v.slice(2,4)+'.'+v.slice(4); else if(v.length>=3) v=v.slice(0,2)+'.'+v.slice(2); el.value=v; } onChange(); }); el.addEventListener('blur',()=>{ const norm=normalizeDateInput(el.value); if(norm&&parseDate(norm)) el.value=norm; onChange(); }); }
+    bindDateInput(ddDate1, recalcPair1FromDate); bindDateInput(ddDate2, recalcPair2FromDate);
+    if(ddY1 && ddM1 && ddD1) [ddY1,ddM1,ddD1].forEach(e=>e.addEventListener('input', recalcPair1FromYMD));
+    if(ddY2 && ddM2 && ddD2) [ddY2,ddM2,ddD2].forEach(e=>e.addEventListener('input', recalcPair2FromYMD));
+    document.getElementById('ddClearBtn')?.addEventListener('click',()=>{ if(ddDate1) ddDate1.value=''; if(ddDate2) ddDate2.value=''; clearFields(ddY1,ddM1,ddD1); clearFields(ddY2,ddM2,ddD2); if(ddDate1) ddDate1.focus(); });
+
+    // === РОЗРАХУНОК ВІКУ ===
+    const ageBirth=document.getElementById('ageBirth'), ageY=document.getElementById('ageY'), ageM=document.getElementById('ageM'), ageD=document.getElementById('ageD'), age25=document.getElementById('age25'), age45=document.getElementById('age45');
+    function birthdayAt(birth,years){ return new Date(birth.getFullYear()+years, birth.getMonth(), birth.getDate()); }
+    function recalcAge(){
+      const b=parseDate(ageBirth?.value);
+      if(!b){ if(ageY)ageY.value=''; if(ageM)ageM.value=''; if(ageD)ageD.value=''; if(age25)age25.value=''; if(age45)age45.value=''; return; }
+      const t=todayFn(); const r=diffYMD(b,t);
+      if(ageY)ageY.value=r.y; if(ageM)ageM.value=r.m; if(ageD)ageD.value=r.d;
+      if(age25)age25.value=fmtDateOnly(birthdayAt(b,25));
+      if(age45)age45.value=fmtDateOnly(birthdayAt(b,45));
+    }
+    bindDateInput(ageBirth, recalcAge);
+    document.getElementById('ageClearBtn')?.addEventListener('click',()=>{ if(ageBirth){ ageBirth.value=''; recalcAge(); ageBirth.focus(); }});
+
+    // === РІЗНИЦЯ ЧАСУ МІЖ ДОВІЛЬНИМИ ДАТАМИ (2-стороння) ===
+    const rgLeft=document.getElementById('rgLeft'), rgRight=document.getElementById('rgRight'), rgY=document.getElementById('rgY'), rgM=document.getElementById('rgM'), rgD=document.getElementById('rgD');
+    let rgLock=false;
+    function rgFromDates(){
+      if(rgLock) return;
+      const l=parseDate(rgLeft?.value), r=parseDate(rgRight?.value);
+      if(!l||!r){ return; }
+      const d=diffYMD(l,r);
+      rgLock=true;
+      if(rgY)rgY.value=d.y; if(rgM)rgM.value=d.m; if(rgD)rgD.value=d.d;
+      rgLock=false;
+    }
+    function rgFromYMD(){
+      if(rgLock) return;
+      const l=parseDate(rgLeft?.value);
+      if(!l) return;
+      const y=parseInt(rgY?.value||'0',10)||0, m=parseInt(rgM?.value||'0',10)||0, d=parseInt(rgD?.value||'0',10)||0;
+      const newR=addYMD(l,y,m,d);
+      rgLock=true;
+      if(rgRight) rgRight.value=fmtDateOnly(newR);
+      rgLock=false;
+    }
+    bindDateInput(rgLeft, rgFromDates);
+    bindDateInput(rgRight, rgFromDates);
+    [rgY,rgM,rgD].forEach(e=>e&&e.addEventListener('input', rgFromYMD));
+    document.getElementById('rgClearBtn')?.addEventListener('click',()=>{ if(rgLeft)rgLeft.value=''; if(rgRight)rgRight.value=''; if(rgY)rgY.value=''; if(rgM)rgM.value=''; if(rgD)rgD.value=''; if(rgLeft)rgLeft.focus(); });
+
+    // === ЖИВИЙ КУРС ПРИВАТБАНКУ (без округлення) ===
+    (async function loadPB(){
+      const fmt=v=>{ const n=Number(v); if(!isFinite(n)) return String(v); return n.toFixed(2); };
+      try{
+        const res=await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11',{cache:'no-store'});
+        if(!res.ok) return;
+        const data=await res.json();
+        const get=ccy=>data.find(x=>x.ccy===ccy);
+        const usd=get('USD'), eur=get('EUR'), pln=get('PLN');
+        const setText=(id,v)=>{ const el=document.getElementById(id); if(el && v!=null) el.textContent=fmt(v); };
+        if(usd){ setText('pbUsdBuy',usd.buy); setText('pbUsdSell',usd.sale); PB_RATES.USD.buy=Number(usd.buy); PB_RATES.USD.sell=Number(usd.sale); }
+        if(eur){ setText('pbEurBuy',eur.buy); setText('pbEurSell',eur.sale); PB_RATES.EUR.buy=Number(eur.buy); PB_RATES.EUR.sell=Number(eur.sale); }
+        if(pln){ setText('pbPlnBuy',pln.buy); setText('pbPlnSell',pln.sale); }
+        updateRateLabel();
+      }catch(e){}
+    })();
+  })();
+</script>
+</body>
+</html>
