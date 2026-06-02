@@ -393,11 +393,11 @@
   }
   .pdf-buttons{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
   .pdf-btn{
-    display:inline-flex;align-items:center;gap:6px;
-    padding:8px 12px;border-radius:10px;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:11px 16px;border-radius:12px;
     background:rgba(255,255,255,.03);
     border:1px solid var(--border);
-    color:var(--text-dim);font-size:12px;font-weight:600;
+    color:var(--text-dim);font-size:14px;font-weight:600;line-height:1.2;
     text-decoration:none;white-space:nowrap;
     transition:all .2s;
   }
@@ -685,8 +685,9 @@
     <div class="nav-menu">
       <button class="nav-link" data-target="sec-age" type="button">Вік</button>
       <button class="nav-link" data-target="sec-rates" type="button">Курс</button>
-      <button class="nav-link" data-target="sec-dates" type="button">Дати</button>
       <button class="nav-link" data-target="sec-pct" type="button">Відсотки</button>
+      <button class="nav-link" data-target="sec-pdf" type="button">PDF</button>
+      <button class="nav-link" data-target="sec-dates" type="button">Дати</button>
       <button class="nav-link" data-target="sec-apostille" type="button">Апостиль</button>
       <button class="nav-link" data-target="sec-services" type="button">Сайти</button>
       <button class="nav-link" data-target="sec-npa" type="button">НПА</button>
@@ -838,7 +839,7 @@
       </div>
       <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" id="pctClearBtn" type="button">Очистити</button></div>
     </div>
-    <div class="glass pdf-card">
+    <div class="glass pdf-card" id="sec-pdf">
       <h4>PDF / фотки <span class="badge">ilovepdf</span></h4>
       <div class="pdf-buttons">
         <a class="pdf-btn" href="https://www.ilovepdf.com/uk/organize-pdf" target="_blank" rel="noopener noreferrer">📄 Організувати PDF</a>
@@ -1134,7 +1135,7 @@
 
     // === ЖИВИЙ КУРС ПРИВАТБАНКУ (без округлення) ===
     (async function loadPB(){
-      const fmt=v=>{ const n=Number(v); if(!isFinite(n)) return String(v); return n.toFixed(2); };
+      const fmt=v=>{ if(v==null) return ''; const s=String(v).trim(); return s.replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,''); };
       try{
         const res=await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11',{cache:'no-store'});
         if(!res.ok) return;
