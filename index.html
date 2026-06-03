@@ -767,32 +767,37 @@
           <div class="pb-logo">ПБ</div>
           <div>
             <h3>Курс ПриватБанк · готівковий</h3>
-            <p>Купівля / продаж на сьогодні</p>
+            <p>Купівля / продаж у відділеннях</p>
           </div>
         </div>
         <a class="btn" href="https://privatbank.ua/obmin-valiut" target="_blank" rel="noopener noreferrer">privatbank.ua →</a>
       </div>
 
-      <div class="pb-rates">
+      <!-- ІНДИКАТОР ЗАВАНТАЖЕННЯ -->
+      <div id="pbLoader" style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; color:var(--text-muted);">
+        <span>🔄 Оновлення курсу...</span>
+      </div>
+
+      <div class="pb-rates" id="pbRatesContainer">
         <div class="pb-rate">
           <div class="ccy"><span class="flag flag-usd">$</span> USD / UAH</div>
           <div class="nums">
-            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbUsdBuy">43.85</span></div>
-            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbUsdSell">44.45</span></div>
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbUsdBuy">--</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbUsdSell">--</span></div>
           </div>
         </div>
         <div class="pb-rate">
           <div class="ccy"><span class="flag flag-eur">€</span> EUR / UAH</div>
           <div class="nums">
-            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbEurBuy">50.80</span></div>
-            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbEurSell">51.80</span></div>
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbEurBuy">--</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbEurSell">--</span></div>
           </div>
         </div>
         <div class="pb-rate">
           <div class="ccy"><span class="flag flag-pln">zł</span> PLN / UAH</div>
           <div class="nums">
-            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbPlnBuy">11.60</span></div>
-            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbPlnSell">12.14</span></div>
+            <div class="buy"><span class="lbl">Купівля</span><span class="v" id="pbPlnBuy">--</span></div>
+            <div class="sell"><span class="lbl">Продаж</span><span class="v" id="pbPlnSell">--</span></div>
           </div>
         </div>
       </div>
@@ -811,7 +816,7 @@
           <div class="swap">⇄</div>
           <div class="field"><label><span id="ccyLabel">USD</span> (валюта)</label><input id="ccyInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
         </div>
-        <div class="conv-foot"><div class="hint">Курс: <b id="curRateLabel">43.80 ₴ за 1 USD</b></div><button class="btn" id="clearBtn" type="button">Очистити</button></div>
+        <div class="conv-foot"><div class="hint">Курс: <b id="curRateLabel">--</b></div><button class="btn" id="clearBtn" type="button">Очистити</button></div>
       </div>
     </div>
 
@@ -1135,19 +1140,84 @@
 
     // === ЖИВИЙ КУРС ПРИВАТБАНКУ (без округлення) ===
     (async function loadPB(){
-      const fmt=v=>{ if(v==null) return ''; const s=String(v).trim(); return s.replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,''); };
+      const fmt=v=>{ if(v==null || isNaN(v)) return '--'; const num = Number(v); return num.toFixed(2); };
+      
+      const setText=(id,v)=>{ const el=document.getElementById(id); if(el && v!=null) el.textContent=fmt(v); };
+      const setRateObject=(ccy, buy, sell)=>{
+        if(PB_RATES[ccy]){ PB_RATES[ccy].buy=buy; PB_RATES[ccy].sell=sell; }
+      };
+      
       try{
-        const res=await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11',{cache:'no-store'});
-        if(!res.ok) return;
-        const data=await res.json();
-        const get=ccy=>data.find(x=>x.ccy===ccy);
-        const usd=get('USD'), eur=get('EUR'), pln=get('PLN');
-        const setText=(id,v)=>{ const el=document.getElementById(id); if(el && v!=null) el.textContent=fmt(v); };
-        if(usd){ setText('pbUsdBuy',usd.buy); setText('pbUsdSell',usd.sale); PB_RATES.USD.buy=Number(usd.buy); PB_RATES.USD.sell=Number(usd.sale); }
-        if(eur){ setText('pbEurBuy',eur.buy); setText('pbEurSell',eur.sale); PB_RATES.EUR.buy=Number(eur.buy); PB_RATES.EUR.sell=Number(eur.sale); }
-        if(pln){ setText('pbPlnBuy',pln.buy); setText('pbPlnSell',pln.sale); }
+        // Використовуємо CORS-проксі для обходу блокувань
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const targetUrl = 'https://api.privatbank.ua/p24api/pubinfo?exchange&coursid=11';
+        
+        const res = await fetch(proxyUrl + encodeURIComponent(targetUrl), { cache: 'no-store' });
+        if(!res.ok) throw new Error('HTTP error');
+        const data = await res.json();
+        
+        // Парсимо курси
+        const usd = data.find(x => x.ccy === 'USD');
+        const eur = data.find(x => x.ccy === 'EUR');
+        const pln = data.find(x => x.ccy === 'PLN');
+        
+        let loaded = false;
+        
+        if(usd && usd.buy && usd.sale){
+          const buyVal = parseFloat(usd.buy);
+          const sellVal = parseFloat(usd.sale);
+          setText('pbUsdBuy', buyVal);
+          setText('pbUsdSell', sellVal);
+          setRateObject('USD', buyVal, sellVal);
+          loaded = true;
+        }
+        
+        if(eur && eur.buy && eur.sale){
+          const buyVal = parseFloat(eur.buy);
+          const sellVal = parseFloat(eur.sale);
+          setText('pbEurBuy', buyVal);
+          setText('pbEurSell', sellVal);
+          setRateObject('EUR', buyVal, sellVal);
+          loaded = true;
+        }
+        
+        if(pln && pln.buy && pln.sale){
+          const buyVal = parseFloat(pln.buy);
+          const sellVal = parseFloat(pln.sale);
+          setText('pbPlnBuy', buyVal);
+          setText('pbPlnSell', sellVal);
+          loaded = true;
+        }
+        
+        // Оновлюємо індикатор
+        const loader = document.getElementById('pbLoader');
+        if(loader) {
+          if(loaded) {
+            loader.innerHTML = '<span>✅ Курс оновлено</span>';
+            setTimeout(() => { if(loader) loader.style.display = 'none'; }, 3000);
+          } else {
+            loader.innerHTML = '<span>⚠️ Не вдалося завантажити курс</span>';
+          }
+        }
+        
+        if(loaded) updateRateLabel();
+        
+      } catch(e) {
+        console.error('Помилка завантаження курсу ПриватБанку:', e);
+        const loader = document.getElementById('pbLoader');
+        if(loader) loader.innerHTML = '<span>❌ Помилка завантаження, використовуються резервні дані</span>';
+        
+        // Резервні дані (на випадок помилки)
+        setText('pbUsdBuy', 43.90);
+        setText('pbUsdSell', 44.50);
+        setText('pbEurBuy', 50.90);
+        setText('pbEurSell', 51.90);
+        setText('pbPlnBuy', 11.55);
+        setText('pbPlnSell', 12.22);
+        setRateObject('USD', 43.90, 44.50);
+        setRateObject('EUR', 50.90, 51.90);
         updateRateLabel();
-      }catch(e){}
+      }
     })();
 
     // === НАВ-БАР: годинник + плавна навігація ===
