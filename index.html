@@ -711,8 +711,8 @@
           </div>
         </div>
         <div class="dd-row-custom" style="margin-top:16px;">
-          <div class="dd-date-field"><div class="field"><label>Коли виповнилося 25 років</label><input id="age25" type="text" readonly placeholder="дд.мм.рррр"></div></div>
-          <div class="dd-date-field"><div class="field"><label>Коли виповнилося 45 років</label><input id="age45" type="text" readonly placeholder="дд.мм.рррр"></div></div>
+          <div class="dd-date-field"><div class="field"><label> 25 років</label><input id="age25" type="text" readonly placeholder="дд.мм.рррр"></div></div>
+          <div class="dd-date-field"><div class="field"><label> 45 років</label><input id="age45" type="text" readonly placeholder="дд.мм.рррр"></div></div>
         </div>
       </div>
       <div class="clear-btn-wrap"><button class="btn" id="ageClearBtn" type="button">Очистити</button></div>
@@ -830,7 +830,7 @@
   <section class="pct-pdf-grid" id="sec-pct">
     <div class="glass calc-card" style="padding:28px;">
       <h4 style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;">Відсотки від суми <span class="badge" style="background:rgba(124,156,255,.15);color:#a8bcff;">1% · 5% · 18%</span></h4>
-      <p class="sub" style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Введіть суму — копійки автоматично, кома як роздільник, пробіли в тисячах.</p>
+      <p class="sub" style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Будьте ласкаві, введіть суму для розрахунку.</p>
       <div class="field"><label>Сума (₴)</label><input id="pctSum" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off"></div>
       <div class="pct-grid">
         <div class="pct-item pct-1"><div class="pct-lbl">1% від суми</div><div class="pct-val" id="pct1">0,00</div></div>
@@ -840,7 +840,7 @@
       <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" id="pctClearBtn" type="button">Очистити</button></div>
     </div>
     <div class="glass pdf-card" id="sec-pdf">
-      <h4>PDF / фотки <span class="badge">ilovepdf</span></h4>
+      <h4>PDF / фотки <span class="badge">обрбока файлів та конвертер</span></h4>
       <div class="pdf-buttons">
         <a class="pdf-btn" href="https://www.ilovepdf.com/uk/organize-pdf" target="_blank" rel="noopener noreferrer">📄 Організувати PDF</a>
         <a class="pdf-btn" href="https://www.ilovepdf.com/uk/merge_pdf" target="_blank" rel="noopener noreferrer">📄 Об'єднання PDF</a>
@@ -857,7 +857,7 @@
     </div>
   </section>
 
-  <!-- РІЗНИЦЯ МІЖ ДАТАМИ — ПОЛНАЯ ШИРИНА (full-width) -->
+  <!-- РІЗНИЦЯ МІЖ ДАТАМИ —(full-width) -->
   <section class="fullwidth-date-diff">
     <div class="fullwidth-glass date-diff-card">
       <h4>Різниця між датами <span class="badge">авто</span></h4>
@@ -904,7 +904,7 @@
     </div>
   </section>
 
-  <!-- НОВИЙ БЛОК АПОСТИЛЬ (ліва частина - договори, права частина - Гаага + пошук) з file2.html -->
+  <!-- НОВИЙ БЛОК АПОСТИЛЬ (ліва частина - договори, права частина - Гаага + пошук)  -->
   <section class="apostille-grid" id="sec-apostille">
     <!-- Ліва: Країни з договорами про правову допомогу (без апостиля) -->
     <div class="glass apostille-left">
@@ -952,7 +952,7 @@
     { name: "Перевірка коду", desc: "Перевірка дати народження щодо РНОКПП.", url: "https://ind-kod.org.ua/ua/", tag: "РНОКПП", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>` },
     { name: "Пошук недійсних документів ДМС", desc: "Перевірка за базою недійсних документів.", url: "https://dmsu.gov.ua/services/nd.html", tag: "ДМС", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M12 12v4"/></svg>` },
     { name: "Пошук викрадених документів МВС", desc: "Сервіс пошуку паспорту серед втрачених або викрадених.", url: "https://search-passport.mvs.gov.ua", tag: "МВС", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7"/></svg>` },
-    // ДОДАНІ 4 нові кнопки з file2.html
+    // 04.06. додаю нові кнопки
     { name: "Електронний реєстр апостилів", desc: "Подача та оформлення заяв на проставлення апостилю", url: "https://era.minjust.gov.ua/login", tag: "апостиль", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>` },
     { name: "РАЦС", desc: "Державний реєстр актів цивільного стану громадян", url: "https://regdracs.minjust.gov.ua/login", tag: "загс", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h8"/></svg>` },
     { name: "кабінет нотаріуса ощадбанк", desc: "Подання запитів до ОЩАДбанку по спадщині", url: "https://pkb.oschadbank.ua/login", tag: "ощад спадщина", icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18v12H3z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>` },
@@ -995,7 +995,7 @@
   hagueSearch.addEventListener('input', (e) => renderHagueList(e.target.value));
   renderHagueList("");
 
-  // ---- НПА (групи з посиланнями з file2.html) ----
+  // ---- НПА (групи з посиланнями) ----
   const npaGroups = [
     { title: "Нотаріальні НПА", items: [
       { name: "Закон \"Про Нотаріат\"", url: "https://zakon.rada.gov.ua/laws/show/3425-12#Text" },
