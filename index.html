@@ -1041,30 +1041,22 @@
     </div>
   </section>
 
-  <!-- РІЗНИЦЯ МІЖ ДАТАМИ (full-width) -->
+  <!-- РІЗНИЦЯ МІЖ ДАТАМИ (ПЕРЕДОРУЧЕННЯ ПРОМІЖДОК ЧАСУ ВІД СЬОГОДНІ І ДО КІНЦЯ ДІЇ ДОРУЧЕННЯ ) -->
   <section class="fullwidth-date-diff">
     <div class="fullwidth-glass date-diff-card">
-      <h4>Різниця між датами <span class="badge">авто</span></h4>
-      <p class="sub">Введіть дату цифрами (напр. 13052026) — крапки поставляться автоматично. Підтримка форматів: 13.5.2026 / 13/05/2026. Поля років/місяців/днів синхронізуються в обидва боки.</p>
+      <h4>ПЕРЕДОРУЧЕННЯ - ДОВІРЕНІСТЬ НА ПЕВНИЙ ТЕРМІН <span class="badge">авто</span></h4>
+      <p class="sub">Введіть дату цифрами (напр. 13052026) — крапки поставляться автоматично. ПЕРЕДОРУЧЕННЯ - введіть дату закінчення строку дії основної довіреності - покаже кількість років, місяців, днів дійсності передовіреності. ДОВІРЕНІСТЬ НА ПЕВНИЙ ТЕРМІН - введіть кількість місяців/днів - покаже дату закінчення строку дії довіреності. </p>
 
+      
       <div class="dd-block">
-        <div class="dd-header"><span>📅 Перша дата → Сьогодні</span></div>
+        <div class="dd-header"><span>📅 Сьогодні → Дата </span></div>
         <div class="dd-row-custom">
-          <div class="dd-date-field"><div class="field"><label>Перша дата</label><input id="ddDate1" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
-          <div class="dd-ymd-group"><div class="field"><label>Років</label><input id="ddY1" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Місяців</label><input id="ddM1" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Днів</label><input id="ddD1" type="text" inputmode="numeric" placeholder="0"></div></div>
-          <div class="dd-today-field"><div><span class="today-pill">сьогодні</span></div><div class="field"><label>Поточна дата</label><input id="ddToday1" type="text" readonly></div></div>
-        </div>
-      </div>
-
-      <div class="dd-block">
-        <div class="dd-header"><span>📅 Сьогодні → Третя дата</span></div>
-        <div class="dd-row-custom">
-          <div class="dd-today-field"><div><span class="today-pill">сьогодні</span></div><div class="field"><label>Поточна дата</label><input id="ddToday2" type="text" readonly></div></div>
+          <div class="dd-today-field"><div><span class="today-pill">СЬОГОДНІ</span></div><div class="field"><label>Поточна дата</label><input id="ddToday2" type="text" readonly></div></div>
           <div class="dd-ymd-group"><div class="field"><label>Років</label><input id="ddY2" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Місяців</label><input id="ddM2" type="text" inputmode="numeric" placeholder="0"></div><div class="field"><label>Днів</label><input id="ddD2" type="text" inputmode="numeric" placeholder="0"></div></div>
-          <div class="dd-date-field"><div class="field"><label>Третя дата</label><input id="ddDate2" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
+          <div class="dd-date-field"><div class="field"><label>ДАТА </label><input id="ddDate2" type="text" inputmode="numeric" placeholder="дд.мм.рррр" autocomplete="off"></div></div>
         </div>
       </div>
-      <div class="clear-btn-wrap"><button class="btn" id="ddClearBtn" type="button">Очистити всі дати</button></div>
+      <div class="clear-btn-wrap"><button class="btn" id="ddClearBtn" type="button">Очистити поля </button></div>
     </div>
   </section>
 
@@ -1113,7 +1105,7 @@
   </div>
 </main>
 
-<footer><div>© <span id="year"></span> Notary Assistant версія від 05.06.2026 — АРМН </div><div class="made">Створено з повагою</div></footer>
+<footer><div>© <span id="year"></span> Notary Assistant версія від 15.06.2026 — АРМН </div><div class="made">Створено з повагою</div></footer>
 
 <script>
   // ---------------------------- ПЕРЕМИКАЧ ТЕМИ ----------------------------
