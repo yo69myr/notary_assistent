@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -10,23 +10,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-0:#07080c;
-    --bg-1:#0b0d14;
-    --bg-2:#10131c;
-    --surface:rgba(20,24,36,0.55);
-    --surface-2:rgba(28,33,48,0.65);
-    --border:rgba(255,255,255,0.08);
-    --border-strong:rgba(255,255,255,0.14);
-    --text:#e8ecf3;
-    --text-dim:#9aa3b2;
+    --bg-0:#f4f6fb;
+    --bg-1:#ffffff;
+    --bg-2:#eef1f8;
+    --surface:rgba(255,255,255,0.72);
+    --surface-2:rgba(255,255,255,0.88);
+    --border:rgba(15,20,40,0.08);
+    --border-strong:rgba(15,20,40,0.16);
+    --text:#0f1424;
+    --text-dim:#3d4456;
     --text-muted:#6b7384;
-    --accent:#7c9cff;
-    --accent-2:#9d7bff;
-    --success:#3ddc97;
-    --danger:#ff6b6b;
+    --accent:#4f6dff;
+    --accent-2:#7a52ff;
+    --success:#16a373;
+    --danger:#e64545;
     --radius:18px;
-    --shadow-lg:0 30px 80px -20px rgba(0,0,0,.6), 0 8px 32px -8px rgba(0,0,0,.4);
-    --shadow-glow:0 0 0 1px rgba(124,156,255,.18), 0 20px 60px -20px rgba(124,156,255,.35);
+    --shadow-lg:0 30px 80px -20px rgba(60,80,140,.18), 0 8px 32px -8px rgba(60,80,140,.10);
+    --shadow-glow:0 0 0 1px rgba(79,109,255,.22), 0 20px 60px -20px rgba(79,109,255,.35);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -42,16 +42,16 @@
     content:"";
     position:fixed;inset:0;z-index:-2;
     background:
-      radial-gradient(1200px 700px at 80% -10%, rgba(124,156,255,.18), transparent 60%),
-      radial-gradient(900px 600px at -10% 20%, rgba(157,123,255,.16), transparent 60%),
-      radial-gradient(800px 600px at 50% 110%, rgba(61,220,151,.10), transparent 60%),
-      linear-gradient(180deg,#07080c 0%, #090b12 100%);
+      radial-gradient(1200px 700px at 80% -10%, rgba(79,109,255,.14), transparent 60%),
+      radial-gradient(900px 600px at -10% 20%, rgba(122,82,255,.12), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(22,163,115,.08), transparent 60%),
+      linear-gradient(180deg,#f4f6fb 0%, #eaeefa 100%);
   }
   body::after{
     content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     background-image:
-      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      linear-gradient(rgba(15,20,40,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,20,40,.04) 1px, transparent 1px);
     background-size:48px 48px;
     mask-image:radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
   }
@@ -60,7 +60,7 @@
     position:fixed;top:0;left:0;right:0;width:100%;z-index:1000;
     backdrop-filter:saturate(160%) blur(18px);
     -webkit-backdrop-filter:saturate(160%) blur(18px);
-    background:rgba(8,10,16,.75);
+    background:rgba(255,255,255,.78);
     border-bottom:1px solid var(--border);
   }
   body{padding-top:72px}
@@ -75,7 +75,7 @@
     font:inherit;font-size:13px;font-weight:600;padding:8px 14px;cursor:pointer;
     border-radius:8px;transition:all .2s;white-space:nowrap;
   }
-  .nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+  .nav-link:hover{color:var(--text);background:rgba(15,20,40,.05)}
   .nav-link + .nav-link{position:relative}
   .nav-link + .nav-link::before{
     content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
@@ -97,8 +97,8 @@
   .brand-mark{
     width:34px;height:34px;border-radius:10px;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    display:grid;place-items:center;color:#0b0d14;font-weight:800;
-    box-shadow:0 6px 20px -6px rgba(124,156,255,.7);
+    display:grid;place-items:center;color:#fff;font-weight:800;
+    box-shadow:0 6px 20px -6px rgba(79,109,255,.5);
   }
   .brand-title{font-family:'Manrope',sans-serif;font-size:15px}
   .brand-sub{font-size:11px;color:var(--text-muted);font-weight:500}
@@ -106,14 +106,14 @@
     display:inline-flex;align-items:center;gap:8px;
     height:40px;padding:0 16px;border-radius:12px;
     font:inherit;font-size:13px;font-weight:600;color:var(--text);
-    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    background:rgba(15,20,40,.03);border:1px solid var(--border);
     cursor:pointer;transition:all .2s ease;white-space:nowrap;
   }
-  .btn:hover{background:rgba(255,255,255,.08);border-color:var(--border-strong);transform:translateY(-1px)}
+  .btn:hover{background:rgba(15,20,40,.07);border-color:var(--border-strong);transform:translateY(-1px)}
   .btn-primary{
-    background:linear-gradient(135deg, rgba(124,156,255,.18), rgba(157,123,255,.18));
-    border-color:rgba(124,156,255,.35);
-    color:#fff;
+    background:linear-gradient(135deg, rgba(79,109,255,.16), rgba(122,82,255,.16));
+    border-color:rgba(79,109,255,.35);
+    color:#1a1f3a;
   }
   .btn-primary:hover{box-shadow:var(--shadow-glow)}
   .btn .spin{animation:spin 1s linear infinite}
@@ -125,7 +125,7 @@
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
     padding:6px 12px;border-radius:999px;
-    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    background:rgba(15,20,40,.04);border:1px solid var(--border);
     font-size:12px;color:var(--text-dim);margin-bottom:20px;
   }
   .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 12px var(--success)}
@@ -133,7 +133,7 @@
     font-family:'Manrope',sans-serif;
     font-size:clamp(36px,5.5vw,64px);
     line-height:1.05;letter-spacing:-.03em;font-weight:800;
-    background:linear-gradient(180deg,#fff 0%, #b9c2d6 100%);
+    background:linear-gradient(180deg,#0f1424 0%, #4a5273 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .subtitle{margin-top:16px;color:var(--text-dim);font-size:clamp(15px,1.6vw,18px);max-width:560px;margin-left:auto;margin-right:auto}
@@ -162,9 +162,9 @@
   .rate-title{display:flex;align-items:center;gap:12px}
   .nbu-logo{
     width:38px;height:38px;border-radius:10px;
-    background:linear-gradient(135deg,#1a2340,#0f1424);
+    background:linear-gradient(135deg,#e8edff,#cdd6ff);
     border:1px solid var(--border-strong);
-    display:grid;place-items:center;font-weight:800;font-size:11px;color:#ffd86b;letter-spacing:.05em;
+    display:grid;place-items:center;font-weight:800;font-size:11px;color:#3a4a8f;letter-spacing:.05em;
   }
   .rate-title h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700}
   .rate-title p{font-size:12px;color:var(--text-muted)}
@@ -175,7 +175,7 @@
   .rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .rate-item{
     padding:20px;border-radius:16px;
-    background:rgba(255,255,255,.025);
+    background:rgba(255,255,255,.65);
     border:1px solid var(--border);
     position:relative;overflow:hidden;
     transition:border-color .2s, transform .2s;
@@ -183,19 +183,19 @@
   .rate-item:hover{border-color:var(--border-strong);transform:translateY(-2px)}
   .rate-item .ccy{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:13px;font-weight:500;margin-bottom:12px}
   .flag{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700}
-  .flag-usd{background:linear-gradient(135deg,#1d6f42,#0f3d24);color:#bff5d2}
-  .flag-eur{background:linear-gradient(135deg,#1a3a8f,#0a1f55);color:#cfd9ff}
+  .flag-usd{background:linear-gradient(135deg,#cdebd9,#9fd6b4);color:#0f5a36}
+  .flag-eur{background:linear-gradient(135deg,#d6dffb,#a8b8ee);color:#2a3a8f}
   .rate-value{
     font-family:'Manrope',sans-serif;font-size:34px;font-weight:800;letter-spacing:-.02em;
     line-height:1;display:flex;align-items:baseline;gap:8px;
   }
   .rate-value .uah{font-size:13px;color:var(--text-muted);font-weight:500}
   .rate-trend{margin-top:10px;font-size:12px;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-weight:600}
-  .trend-up{background:rgba(61,220,151,.12);color:var(--success)}
-  .trend-down{background:rgba(255,107,107,.12);color:var(--danger)}
-  .trend-flat{background:rgba(255,255,255,.06);color:var(--text-muted)}
+  .trend-up{background:rgba(22,163,115,.14);color:var(--success)}
+  .trend-down{background:rgba(230,69,69,.12);color:var(--danger)}
+  .trend-flat{background:rgba(15,20,40,.06);color:var(--text-muted)}
   .skeleton{
-    background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));
+    background:linear-gradient(90deg,rgba(15,20,40,.05),rgba(15,20,40,.10),rgba(15,20,40,.05));
     background-size:200% 100%;animation:shimmer 1.4s infinite;
     border-radius:8px;color:transparent!important;
   }
@@ -203,8 +203,8 @@
 
   .rate-tomorrow{padding:24px;display:flex;flex-direction:column;gap:16px}
   .rate-tomorrow h4{font-family:'Manrope',sans-serif;font-size:13px;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-  .rate-tomorrow h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(124,156,255,.15);color:#a8bcff;text-transform:none;letter-spacing:0}
-  .mini-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .rate-tomorrow h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(79,109,255,.15);color:#3a55d8;text-transform:none;letter-spacing:0}
+  .mini-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.65);border:1px solid var(--border)}
   .mini-row .left{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-dim)}
   .mini-row .val{font-family:'Manrope',sans-serif;font-weight:700;font-size:16px}
   .tomorrow-empty{font-size:13px;color:var(--text-muted);text-align:center;padding:20px 0}
@@ -215,7 +215,7 @@
   }
   .section-head h2{font-family:'Manrope',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.02em}
   .section-head p{color:var(--text-muted);font-size:13px;margin-top:4px}
-  .count{font-size:12px;color:var(--text-muted);padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .count{font-size:12px;color:var(--text-muted);padding:6px 12px;border-radius:999px;background:rgba(15,20,40,.04);border:1px solid var(--border)}
 
   .grid{
     display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
@@ -239,26 +239,26 @@
   }
   .card::after{
     content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
-    background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), rgba(124,156,255,.18), transparent 40%);
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), rgba(79,109,255,.18), transparent 40%);
   }
   .card:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:var(--shadow-glow)}
   .card:hover::after{opacity:1}
   .card-icon{
     width:46px;height:46px;border-radius:13px;
     display:grid;place-items:center;
-    background:linear-gradient(135deg, rgba(124,156,255,.16), rgba(157,123,255,.10));
-    border:1px solid rgba(124,156,255,.18);
-    color:#cfd9ff;
+    background:linear-gradient(135deg, rgba(79,109,255,.16), rgba(122,82,255,.10));
+    border:1px solid rgba(79,109,255,.22);
+    color:#3a4a8f;
   }
   .card h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em}
   .card p{font-size:13px;color:var(--text-muted);line-height:1.5;flex:1}
   .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
-  .card-tag{font-size:11px;color:var(--text-muted);padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .card-tag{font-size:11px;color:var(--text-muted);padding:4px 8px;border-radius:6px;background:rgba(15,20,40,.04);border:1px solid var(--border)}
   .card-arrow{
     width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--text-dim);
-    background:rgba(255,255,255,.04);border:1px solid var(--border);transition:all .25s;
+    background:rgba(15,20,40,.04);border:1px solid var(--border);transition:all .25s;
   }
-  .card:hover .card-arrow{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b0d14;border-color:transparent;transform:translate(2px,-2px)}
+  .card:hover .card-arrow{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent;transform:translate(2px,-2px)}
 
   .empty-state{grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-size:14px}
   footer{
@@ -278,43 +278,43 @@
   .pb-card{padding:28px}
   .pb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
   .pb-title{display:flex;align-items:center;gap:12px}
-  .pb-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#3a8a2e,#1f4a18);border:1px solid var(--border-strong);display:grid;place-items:center;font-weight:800;font-size:11px;color:#bff5d2;letter-spacing:.05em}
+  .pb-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#c8e8c0,#94c98a);border:1px solid var(--border-strong);display:grid;place-items:center;font-weight:800;font-size:11px;color:#1f4a18;letter-spacing:.05em}
   .pb-title h3{font-family:'Manrope',sans-serif;font-size:16px;font-weight:700}
   .pb-title p{font-size:12px;color:var(--text-muted)}
   .pb-rates{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
   @media (max-width:600px){.pb-rates{grid-template-columns:1fr}}
-  .pb-rate{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .pb-rate{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid var(--border)}
   .pb-rate .ccy{font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:500}
   .pb-rate .nums{display:flex;justify-content:space-between;gap:10px;font-family:'Manrope',sans-serif}
   .pb-rate .lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px}
   .pb-rate .v{font-size:18px;font-weight:700}
   .pb-rate .buy .v{color:var(--success)}
-  .pb-rate .sell .v{color:#ffb074}
-  .flag-pln{background:linear-gradient(135deg,#8f1a3a,#5a0a1f);color:#ffcfd9}
+  .pb-rate .sell .v{color:#c46a2d}
+  .flag-pln{background:linear-gradient(135deg,#fad0d9,#f0a3b3);color:#8a1a3a}
 
-  .conv{padding:20px;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+  .conv{padding:20px;border-radius:16px;background:rgba(255,255,255,.65);border:1px solid var(--border)}
   .conv-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-  .tab{flex:1;min-width:90px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text-dim);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+  .tab{flex:1;min-width:90px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(15,20,40,.03);color:var(--text-dim);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
   .tab:hover{border-color:var(--border-strong);color:var(--text)}
-  .tab.active{background:linear-gradient(135deg,rgba(124,156,255,.22),rgba(157,123,255,.22));border-color:rgba(124,156,255,.45);color:#fff;box-shadow:var(--shadow-glow)}
+  .tab.active{background:linear-gradient(135deg,rgba(79,109,255,.20),rgba(122,82,255,.20));border-color:rgba(79,109,255,.45);color:#1a1f3a;box-shadow:var(--shadow-glow)}
   .conv-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end;margin-top:14px}
   @media (max-width:520px){.conv-fields{grid-template-columns:1fr;}.swap{display:none}}
   .field label{display:block;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600}
   .field input{
     width:100%;height:48px;padding:0 14px;border-radius:12px;
-    background:rgba(8,10,16,.6);border:1px solid var(--border);color:var(--text);
+    background:rgba(255,255,255,.85);border:1px solid var(--border);color:var(--text);
     font:inherit;font-family:'Manrope',sans-serif;font-size:16px;font-weight:500;
     outline:none;transition:border-color .2s,box-shadow .2s;
   }
-  .field input:focus{border-color:rgba(124,156,255,.55);box-shadow:0 0 0 3px rgba(124,156,255,.15)}
-  .swap{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text-dim);align-self:center;margin-top:18px}
+  .field input:focus{border-color:rgba(79,109,255,.55);box-shadow:0 0 0 3px rgba(79,109,255,.15)}
+  .swap{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(15,20,40,.05);border:1px solid var(--border);color:var(--text-dim);align-self:center;margin-top:18px}
   .conv-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px;flex-wrap:wrap}
   .conv-foot .hint{font-size:12px;color:var(--text-muted)}
   .conv-foot .hint b{color:var(--text-dim);font-weight:600}
 
   .ha-card{padding:24px;display:flex;flex-direction:column;gap:14px}
   .ha-card h4{font-family:'Manrope',sans-serif;font-size:13px;color:var(--text-dim);font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-  .ha-card h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(61,220,151,.15);color:#9aeac4;text-transform:none;letter-spacing:0}
+  .ha-card h4 .badge{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(22,163,115,.15);color:#0f8a5b;text-transform:none;letter-spacing:0}
   .ha-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media (max-width:600px){.ha-fields{grid-template-columns:1fr}}
 
@@ -330,7 +330,7 @@
     justify-content:space-between;
     padding:16px 20px;
     border-radius:16px;
-    background:rgba(255,255,255,.03);
+    background:rgba(255,255,255,.65);
     border:1px solid var(--border);
     transition:all .2s;
     width:100%;
@@ -338,7 +338,7 @@
   .pct-item:hover{
     border-color:var(--border-strong);
     transform:translateY(-2px);
-    background:rgba(255,255,255,.05);
+    background:rgba(255,255,255,.95);
   }
   .pct-lbl{
     font-size:15px;
@@ -351,12 +351,12 @@
     font-family:'Manrope',sans-serif;
     font-size:24px;
     font-weight:800;
-    color:#fff;
+    color:#0f1424;
     white-space:nowrap;
   }
-  .pct-1 .pct-val{color:#a8bcff}
-  .pct-5 .pct-val{color:#9aeac4}
-  .pct-18 .pct-val{color:#ffb074}
+  .pct-1 .pct-val{color:#3a55d8}
+  .pct-5 .pct-val{color:#0f8a5b}
+  .pct-18 .pct-val{color:#c46a2d}
   @media (max-width:600px){
     .pct-val{font-size:20px; white-space:normal; word-break:keep-all;}
     .pct-item{flex-wrap:wrap; gap:10px;}
@@ -375,23 +375,23 @@
   }
   .pdf-card h4 .badge{
     font-size:10px;padding:2px 8px;border-radius:999px;
-    background:rgba(124,156,255,.15);color:#a8bcff;font-weight:600;
+    background:rgba(79,109,255,.15);color:#3a55d8;font-weight:600;
   }
   .pdf-buttons{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
   .pdf-btn{
     display:inline-flex;align-items:center;gap:8px;
     padding:11px 16px;border-radius:12px;
-    background:rgba(255,255,255,.03);
+    background:rgba(15,20,40,.03);
     border:1px solid var(--border);
     color:var(--text-dim);font-size:14px;font-weight:600;line-height:1.2;
     text-decoration:none;white-space:nowrap;
     transition:all .2s;
   }
   .pdf-btn:hover{
-    background:linear-gradient(135deg,rgba(124,156,255,.18),rgba(157,123,255,.18));
-    border-color:rgba(124,156,255,.45);
-    color:#fff;transform:translateY(-2px);
-    box-shadow:0 6px 18px -6px rgba(124,156,255,.4);
+    background:linear-gradient(135deg,rgba(79,109,255,.18),rgba(122,82,255,.18));
+    border-color:rgba(79,109,255,.45);
+    color:#1a1f3a;transform:translateY(-2px);
+    box-shadow:0 6px 18px -6px rgba(79,109,255,.4);
   }
   .rate-dup{
     margin-top:8px;font-family:'Manrope',sans-serif;
@@ -429,8 +429,8 @@
     font-size:10px;
     padding:4px 12px;
     border-radius:999px;
-    background:rgba(124,156,255,.2);
-    color:#a8bcff;
+    background:rgba(79,109,255,.2);
+    color:#3a55d8;
   }
   .date-diff-card .sub{
     font-size:13px;
@@ -470,7 +470,7 @@
     display:flex;
     gap:12px;
     flex-wrap:wrap;
-    background:rgba(0,0,0,.2);
+    background:rgba(15,20,40,.05);
     padding:8px 12px;
     border-radius:16px;
     align-items:flex-end;
@@ -488,9 +488,9 @@
     padding:4px 12px;
     border-radius:999px;
     font-size:11px;
-    background:rgba(124,156,255,.12);
-    border:1px solid rgba(124,156,255,.25);
-    color:#a8bcff;
+    background:rgba(79,109,255,.15);
+    border:1px solid rgba(79,109,255,.25);
+    color:#3a55d8;
     font-weight:600;
     margin-bottom:6px;
   }
@@ -553,7 +553,7 @@
     align-items:center;
     padding:12px 14px;
     border-radius:14px;
-    background:rgba(255,255,255,.02);
+    background:rgba(255,255,255,.65);
     border:1px solid var(--border);
     text-decoration:none;
     color:var(--text);
@@ -562,7 +562,7 @@
     transition:all .2s;
   }
   .country-link:hover{
-    background:rgba(124,156,255,.12);
+    background:rgba(79,109,255,.10);
     border-color:var(--accent);
     transform:translateX(4px);
   }
@@ -574,7 +574,7 @@
     height:44px;
     padding:0 14px;
     border-radius:14px;
-    background:rgba(8,10,16,.6);
+    background:rgba(255,255,255,.85);
     border:1px solid var(--border);
     color:var(--text);
     font:inherit;
@@ -583,8 +583,8 @@
     transition:all .2s;
   }
   .search-apostille input:focus{
-    border-color:rgba(124,156,255,.55);
-    box-shadow:0 0 0 3px rgba(124,156,255,.15);
+    border-color:rgba(79,109,255,.55);
+    box-shadow:0 0 0 3px rgba(79,109,255,.15);
   }
   .hague-list{
     max-height:440px;
@@ -597,7 +597,7 @@
   .hague-item{
     padding:10px 14px;
     border-radius:12px;
-    background:rgba(255,255,255,.02);
+    background:rgba(255,255,255,.65);
     border:1px solid var(--border);
     font-size:13px;
     color:var(--text-dim);
@@ -617,7 +617,7 @@
     margin-top:20px;
   }
   .npa-group{
-    background:rgba(255,255,255,.025);
+    background:rgba(255,255,255,.65);
     border:1px solid var(--border);
     border-radius:20px;
     padding:18px;
@@ -648,17 +648,16 @@
   .npa-link span:first-child{flex:1;}
   .npa-arrow{font-size:14px;opacity:0.6;}
 
-  /* ================= THEME TOGGLE BUTTON ================= */
   .theme-toggle{
     display:inline-flex;align-items:center;justify-content:center;
     width:38px;height:38px;border-radius:10px;cursor:pointer;
-    background:rgba(255,255,255,.04);border:1px solid var(--border);
+    background:rgba(15,20,40,.04);border:1px solid var(--border);
     color:var(--text-dim);margin-left:6px;
     transition:all .25s cubic-bezier(.2,.7,.2,1);
     flex-shrink:0;
   }
   .theme-toggle:hover{
-    background:rgba(255,255,255,.08);
+    background:rgba(15,20,40,.08);
     border-color:var(--border-strong);
     color:var(--text);
     transform:translateY(-1px);
@@ -670,151 +669,153 @@
   html[data-theme="light"] .theme-toggle .icon-sun{display:block}
   html[data-theme="light"] .theme-toggle .icon-moon{display:none}
 
-  /* ================= LIGHT THEME ================= */
-  html[data-theme="light"]{
-    --bg-0:#f4f6fb;
-    --bg-1:#ffffff;
-    --bg-2:#eef1f8;
-    --surface:rgba(255,255,255,0.72);
-    --surface-2:rgba(255,255,255,0.88);
-    --border:rgba(15,20,40,0.08);
-    --border-strong:rgba(15,20,40,0.16);
-    --text:#0f1424;
-    --text-dim:#3d4456;
+  html[data-theme="dark"]{
+    --bg-0:#07080c;
+    --bg-1:#0b0d14;
+    --bg-2:#10131c;
+    --surface:rgba(20,24,36,0.55);
+    --surface-2:rgba(28,33,48,0.65);
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --text:#e8ecf3;
+    --text-dim:#9aa3b2;
     --text-muted:#6b7384;
-    --accent:#4f6dff;
-    --accent-2:#7a52ff;
-    --success:#16a373;
-    --danger:#e64545;
-    --shadow-lg:0 30px 80px -20px rgba(60,80,140,.18), 0 8px 32px -8px rgba(60,80,140,.10);
-    --shadow-glow:0 0 0 1px rgba(79,109,255,.22), 0 20px 60px -20px rgba(79,109,255,.35);
+    --accent:#7c9cff;
+    --accent-2:#9d7bff;
+    --success:#3ddc97;
+    --danger:#ff6b6b;
+    --shadow-lg:0 30px 80px -20px rgba(0,0,0,.6), 0 8px 32px -8px rgba(0,0,0,.4);
+    --shadow-glow:0 0 0 1px rgba(124,156,255,.18), 0 20px 60px -20px rgba(124,156,255,.35);
   }
-  html[data-theme="light"] body{
+  html[data-theme="dark"] body{
     background:var(--bg-0);
   }
-  html[data-theme="light"] body::before{
+  html[data-theme="dark"] body::before{
     background:
-      radial-gradient(1200px 700px at 80% -10%, rgba(79,109,255,.14), transparent 60%),
-      radial-gradient(900px 600px at -10% 20%, rgba(122,82,255,.12), transparent 60%),
-      radial-gradient(800px 600px at 50% 110%, rgba(22,163,115,.08), transparent 60%),
-      linear-gradient(180deg,#f4f6fb 0%, #eaeefa 100%);
+      radial-gradient(1200px 700px at 80% -10%, rgba(124,156,255,.18), transparent 60%),
+      radial-gradient(900px 600px at -10% 20%, rgba(157,123,255,.16), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(61,220,151,.10), transparent 60%),
+      linear-gradient(180deg,#07080c 0%, #090b12 100%);
   }
-  html[data-theme="light"] body::after{
+  html[data-theme="dark"] body::after{
     background-image:
-      linear-gradient(rgba(15,20,40,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15,20,40,.04) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
   }
-  html[data-theme="light"] .nav{
-    background:rgba(255,255,255,.78);
+  html[data-theme="dark"] .nav{
+    background:rgba(8,10,16,.75);
     border-bottom:1px solid var(--border);
   }
-  html[data-theme="light"] .nav-link:hover{background:rgba(15,20,40,.05)}
-  html[data-theme="light"] .theme-toggle{background:rgba(15,20,40,.04)}
-  html[data-theme="light"] .theme-toggle:hover{background:rgba(15,20,40,.08)}
-  html[data-theme="light"] .btn{background:rgba(15,20,40,.03)}
-  html[data-theme="light"] .btn:hover{background:rgba(15,20,40,.07)}
-  html[data-theme="light"] .btn-primary{
-    background:linear-gradient(135deg, rgba(79,109,255,.16), rgba(122,82,255,.16));
-    border-color:rgba(79,109,255,.35);
-    color:#1a1f3a;
-  }
-  html[data-theme="light"] .brand-mark{
-    box-shadow:0 6px 20px -6px rgba(79,109,255,.5);
+  html[data-theme="dark"] .nav-link:hover{background:rgba(255,255,255,.05)}
+  html[data-theme="dark"] .theme-toggle{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] .theme-toggle:hover{background:rgba(255,255,255,.08)}
+  html[data-theme="dark"] .btn{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] .btn:hover{background:rgba(255,255,255,.08)}
+  html[data-theme="dark"] .btn-primary{
+    background:linear-gradient(135deg, rgba(124,156,255,.18), rgba(157,123,255,.18));
+    border-color:rgba(124,156,255,.35);
     color:#fff;
   }
-  html[data-theme="light"] .eyebrow{background:rgba(15,20,40,.04)}
-  html[data-theme="light"] .title{
-    background:linear-gradient(180deg,#0f1424 0%, #4a5273 100%);
+  html[data-theme="dark"] .brand-mark{
+    box-shadow:0 6px 20px -6px rgba(124,156,255,.7);
+    color:#0b0d14;
+  }
+  html[data-theme="dark"] .eyebrow{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] h1{
+    background:linear-gradient(180deg,#fff 0%, #b9c2d6 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  html[data-theme="light"] .nbu-logo{
-    background:linear-gradient(135deg,#e8edff,#cdd6ff);
-    color:#3a4a8f;
+  html[data-theme="dark"] .nbu-logo{
+    background:linear-gradient(135deg,#1a2340,#0f1424);
+    color:#ffd86b;
   }
-  html[data-theme="light"] .rate-item,
-  html[data-theme="light"] .pb-rate,
-  html[data-theme="light"] .mini-row,
-  html[data-theme="light"] .conv,
-  html[data-theme="light"] .pct-item,
-  html[data-theme="light"] .dd-block,
-  html[data-theme="light"] .country-link,
-  html[data-theme="light"] .hague-item,
-  html[data-theme="light"] .npa-group,
-  html[data-theme="light"] .pdf-btn{
-    background:rgba(255,255,255,.65);
+  html[data-theme="dark"] .rate-item,
+  html[data-theme="dark"] .pb-rate,
+  html[data-theme="dark"] .mini-row,
+  html[data-theme="dark"] .conv,
+  html[data-theme="dark"] .pct-item,
+  html[data-theme="dark"] .dd-block,
+  html[data-theme="dark"] .country-link,
+  html[data-theme="dark"] .hague-item,
+  html[data-theme="dark"] .npa-group,
+  html[data-theme="dark"] .pdf-btn{
+    background:rgba(255,255,255,.025);
   }
-  html[data-theme="light"] .rate-item:hover,
-  html[data-theme="light"] .pct-item:hover{background:rgba(255,255,255,.95)}
-  html[data-theme="light"] .field input,
-  html[data-theme="light"] .search-apostille input{
-    background:rgba(255,255,255,.85);
+  html[data-theme="dark"] .rate-item:hover,
+  html[data-theme="dark"] .pct-item:hover{background:rgba(255,255,255,.05)}
+  html[data-theme="dark"] .field input,
+  html[data-theme="dark"] .search-apostille input{
+    background:rgba(8,10,16,.6);
     color:var(--text);
   }
-  html[data-theme="light"] .field input::placeholder,
-  html[data-theme="light"] .search-apostille input::placeholder{color:var(--text-muted)}
-  html[data-theme="light"] .field input:focus,
-  html[data-theme="light"] .search-apostille input:focus{
-    border-color:rgba(79,109,255,.55);
-    box-shadow:0 0 0 3px rgba(79,109,255,.15);
+  html[data-theme="dark"] .field input::placeholder,
+  html[data-theme="dark"] .search-apostille input::placeholder{color:var(--text-muted)}
+  html[data-theme="dark"] .field input:focus,
+  html[data-theme="dark"] .search-apostille input:focus{
+    border-color:rgba(124,156,255,.55);
+    box-shadow:0 0 0 3px rgba(124,156,255,.15);
   }
-  html[data-theme="light"] .dd-ymd-group{background:rgba(15,20,40,.05)}
-  html[data-theme="light"] .swap{background:rgba(15,20,40,.05)}
-  html[data-theme="light"] .tab{background:rgba(15,20,40,.03);color:var(--text-dim)}
-  html[data-theme="light"] .tab:hover{color:var(--text)}
-  html[data-theme="light"] .tab.active{
-    background:linear-gradient(135deg,rgba(79,109,255,.20),rgba(122,82,255,.20));
-    border-color:rgba(79,109,255,.45);
-    color:#1a1f3a;
-  }
-  html[data-theme="light"] .pct-val{color:#0f1424}
-  html[data-theme="light"] .pct-1 .pct-val{color:#3a55d8}
-  html[data-theme="light"] .pct-5 .pct-val{color:#0f8a5b}
-  html[data-theme="light"] .pct-18 .pct-val{color:#c46a2d}
-  html[data-theme="light"] .pdf-btn{color:var(--text-dim)}
-  html[data-theme="light"] .pdf-btn:hover{
-    background:linear-gradient(135deg,rgba(79,109,255,.18),rgba(122,82,255,.18));
-    border-color:rgba(79,109,255,.45);
-    color:#1a1f3a;
-    box-shadow:0 6px 18px -6px rgba(79,109,255,.4);
-  }
-  html[data-theme="light"] .count,
-  html[data-theme="light"] .card-tag,
-  html[data-theme="light"] .card-arrow{background:rgba(15,20,40,.04)}
-  html[data-theme="light"] .card:hover .card-arrow{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  html[data-theme="dark"] .dd-ymd-group{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] .swap{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] .tab{background:rgba(255,255,255,.03);color:var(--text-dim)}
+  html[data-theme="dark"] .tab:hover{color:var(--text)}
+  html[data-theme="dark"] .tab.active{
+    background:linear-gradient(135deg,rgba(124,156,255,.22),rgba(157,123,255,.22));
+    border-color:rgba(124,156,255,.45);
     color:#fff;
   }
-  html[data-theme="light"] .card-icon{
-    background:linear-gradient(135deg, rgba(79,109,255,.16), rgba(122,82,255,.10));
-    border:1px solid rgba(79,109,255,.22);
-    color:#3a4a8f;
+  html[data-theme="dark"] .pct-val{color:#fff}
+  html[data-theme="dark"] .pct-1 .pct-val{color:#a8bcff}
+  html[data-theme="dark"] .pct-5 .pct-val{color:#9aeac4}
+  html[data-theme="dark"] .pct-18 .pct-val{color:#ffb074}
+  html[data-theme="dark"] .pdf-btn{color:var(--text-dim)}
+  html[data-theme="dark"] .pdf-btn:hover{
+    background:linear-gradient(135deg,rgba(124,156,255,.18),rgba(157,123,255,.18));
+    border-color:rgba(124,156,255,.45);
+    color:#fff;
+    box-shadow:0 6px 18px -6px rgba(124,156,255,.4);
   }
-  html[data-theme="light"] .trend-up{background:rgba(22,163,115,.14);color:var(--success)}
-  html[data-theme="light"] .trend-down{background:rgba(230,69,69,.12);color:var(--danger)}
-  html[data-theme="light"] .trend-flat{background:rgba(15,20,40,.06);color:var(--text-muted)}
-  html[data-theme="light"] .rate-tomorrow h4 .badge,
-  html[data-theme="light"] .pdf-card h4 .badge,
-  html[data-theme="light"] .date-diff-card h4 .badge,
-  html[data-theme="light"] .today-pill{
-    background:rgba(79,109,255,.15);color:#3a55d8;
+  html[data-theme="dark"] .count,
+  html[data-theme="dark"] .card-tag,
+  html[data-theme="dark"] .card-arrow{background:rgba(255,255,255,.04)}
+  html[data-theme="dark"] .card:hover .card-arrow{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#0b0d14;
   }
-  html[data-theme="light"] .ha-card h4 .badge{
-    background:rgba(22,163,115,.15);color:#0f8a5b;
+  html[data-theme="dark"] .card-icon{
+    background:linear-gradient(135deg, rgba(124,156,255,.16), rgba(157,123,255,.10));
+    border:1px solid rgba(124,156,255,.18);
+    color:#cfd9ff;
   }
-  html[data-theme="light"] .npa-link{border-bottom-color:var(--border)}
-  html[data-theme="light"] footer{border-top-color:var(--border)}
-  html[data-theme="light"] .skeleton{
-    background:linear-gradient(90deg,rgba(15,20,40,.05),rgba(15,20,40,.10),rgba(15,20,40,.05));
+  html[data-theme="dark"] .trend-up{background:rgba(61,220,151,.12);color:var(--success)}
+  html[data-theme="dark"] .trend-down{background:rgba(255,107,107,.12);color:var(--danger)}
+  html[data-theme="dark"] .trend-flat{background:rgba(255,255,255,.06);color:var(--text-muted)}
+  html[data-theme="dark"] .rate-tomorrow h4 .badge,
+  html[data-theme="dark"] .pdf-card h4 .badge,
+  html[data-theme="dark"] .date-diff-card h4 .badge,
+  html[data-theme="dark"] .today-pill{
+    background:rgba(124,156,255,.15);color:#a8bcff;
+  }
+  html[data-theme="dark"] .ha-card h4 .badge{
+    background:rgba(61,220,151,.15);color:#9aeac4;
+  }
+  html[data-theme="dark"] .npa-link{border-bottom-color:var(--border)}
+  html[data-theme="dark"] footer{border-top-color:var(--border)}
+  html[data-theme="dark"] .skeleton{
+    background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));
     background-size:200% 100%;
   }
-  html[data-theme="light"] .country-link:hover{
-    background:rgba(79,109,255,.10);
+  html[data-theme="dark"] .country-link:hover{
+    background:rgba(124,156,255,.12);
   }
-  html[data-theme="light"] .flag-usd{background:linear-gradient(135deg,#cdebd9,#9fd6b4);color:#0f5a36}
-  html[data-theme="light"] .flag-eur{background:linear-gradient(135deg,#d6dffb,#a8b8ee);color:#2a3a8f}
-  html[data-theme="light"] .flag-pln{background:linear-gradient(135deg,#fad0d9,#f0a3b3);color:#8a1a3a}
-  html[data-theme="light"] .pb-logo{background:linear-gradient(135deg,#c8e8c0,#94c98a);color:#1f4a18}
-  html[data-theme="light"] .pb-rate .sell .v{color:#c46a2d}
+  html[data-theme="dark"] .flag-usd{background:linear-gradient(135deg,#1d6f42,#0f3d24);color:#bff5d2}
+  html[data-theme="dark"] .flag-eur{background:linear-gradient(135deg,#1a3a8f,#0a1f55);color:#cfd9ff}
+  html[data-theme="dark"] .flag-pln{background:linear-gradient(135deg,#8f1a3a,#5a0a1f);color:#ffcfd9}
+  html[data-theme="dark"] .pb-logo{background:linear-gradient(135deg,#3a8a2e,#1f4a18);color:#bff5d2}
+  html[data-theme="dark"] .pb-rate .sell .v{color:#ffb074}
+  .pb-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .pb-head-actions .btn{height:36px;padding:0 14px;font-size:12px;}
+  .pb-updated{font-size:11px;color:var(--text-muted);margin-top:4px;display:block;}
 </style>
 </head>
 <body>
@@ -838,15 +839,18 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
     </button>
     <div class="nav-menu">
-      <a class="nav-link" href="https://calc-49ke.onrender.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center;">Онлайн калькулятор</a>
+      <a class="nav-link" href="https://calc-49ke.onrender.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+        Онлайн калькулятор вартості нотаріальних послуг
+      </a>
       <button class="nav-link" data-target="sec-age" type="button">Вік</button>
       <button class="nav-link" data-target="sec-rates" type="button">Курс</button>
       <button class="nav-link" data-target="sec-pct" type="button">Відсотки</button>
       <button class="nav-link" data-target="sec-pdf" type="button">PDF</button>
       <button class="nav-link" data-target="sec-dates" type="button">Передоручення, термін довіреності</button>
       <button class="nav-link" data-target="sec-apostille" type="button">Апостиль</button>
-      <button class="nav-link" data-target="sec-services" type="button">Сайти</button>
-      <button class="nav-link" data-target="sec-npa" type="button">НПА</button>
+      <button class="nav-link" data-target="sec-services" type="button">Сервіси та реєстри, посилання</button>
+      <button class="nav-link" data-target="sec-npa" type="button">НПА - ЗАКОНИ</button>
     </div>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Перемкнути тему" title="Перемкнути тему">
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -958,8 +962,12 @@
             <p>Купівля / продаж у відділеннях</p>
           </div>
         </div>
-        <a class="btn" href="https://privatbank.ua/obmin-valiut" target="_blank" rel="noopener noreferrer">privatbank.ua →</a>
+        <div class="pb-head-actions">
+          <a class="btn" href="https://privatbank.ua/obmin-valiut" target="_blank" rel="noopener noreferrer">privatbank.ua →</a>
+          <button class="btn" id="pbRefreshBtn" type="button">🔄 Оновити сторінку</button>
+        </div>
       </div>
+      <span class="pb-updated" id="pbUpdatedDate"></span>
 
       <div id="pbLoader" style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; color:var(--text-muted);">
         <span>🔄 Оновлення курсу...</span>
@@ -1014,7 +1022,7 @@
   <!-- Блок відсотків + PDF (2 колонки на десктопі) -->
   <section class="pct-pdf-grid" id="sec-pct">
     <div class="glass calc-card" style="padding:28px;">
-      <h4 style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;">Відсотки від суми <span class="badge" style="background:rgba(124,156,255,.15);color:#a8bcff;">1% · 5% · 18%</span></h4>
+      <h4 style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;">Відсотки від суми <span class="badge" style="background:rgba(79,109,255,.15);color:#3a55d8;">1% · 5% · 18%</span></h4>
       <p class="sub" style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Будьте ласкаві, введіть суму для розрахунку.</p>
       <div class="field"><label>Сума (₴)</label><input id="pctSum" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off"></div>
       <div class="pct-grid">
@@ -1039,7 +1047,6 @@
         <a class="pdf-btn" href="https://www.ilovepdf.com/uk/word_to_pdf" target="_blank" rel="noopener noreferrer">📄 Word в PDF</a>
         <a class="pdf-btn" href="https://convertio.co/doc-jpg" target="_blank" rel="noopener noreferrer">📄 Word в JPG</a>
         <a class="pdf-btn" href="https://www.ilovepdf.com/uk/crop-pdf" target="_blank" rel="noopener noreferrer">📄 Обрізати PDF</a>
-        <!-- додані нові кнопки -->
         <a class="pdf-btn" href="https://xpstopdf.com" target="_blank" rel="noopener noreferrer">📄 XPS to PDF</a>
         <a class="pdf-btn" href="https://ua.onlinemschool.com/math/assistance/fraction/fraction_calc1/" target="_blank" rel="noopener noreferrer">🧮 калькулятор дробів детальний</a>
         <a class="pdf-btn" href="https://calculyatordrobiv.com.ua" target="_blank" rel="noopener noreferrer">🧮 калькулятор дробів</a>
@@ -1119,15 +1126,16 @@
     const KEY = 'armn-theme';
     const root = document.documentElement;
     const saved = localStorage.getItem(KEY);
-    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    const initial = saved || (prefersLight ? 'light' : 'dark');
+    // за замовчуванням світла тема, якщо немає збереженого значення
+    const initial = saved || 'light';
+    root.setAttribute('data-theme', initial);
     if (initial === 'light') root.setAttribute('data-theme', 'light');
     document.addEventListener('DOMContentLoaded', function(){
       const btn = document.getElementById('themeToggle');
       if (!btn) return;
       btn.addEventListener('click', function(){
         const isLight = root.getAttribute('data-theme') === 'light';
-        if (isLight) { root.removeAttribute('data-theme'); localStorage.setItem(KEY, 'dark'); }
+        if (isLight) { root.setAttribute('data-theme', 'dark'); localStorage.setItem(KEY, 'dark'); }
         else { root.setAttribute('data-theme', 'light'); localStorage.setItem(KEY, 'light'); }
       });
     });
@@ -1171,7 +1179,6 @@
   document.getElementById('year').textContent = new Date().getFullYear();
 
   // ---- ІНШІ ОРИГІНАЛЬНІ ФУНКЦІЇ (НБУ, ПЛОЩА, ВІК, ДАТИ, ПРИВАТБАНК, НАВІГАЦІЯ) ----
-  // (повністю збережено з оригіналу, тільки об'єднано в одному блоці для працездатності)
   (function fullOriginalScript() {
     // НБУ
     const ymd = d => `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
@@ -1272,6 +1279,20 @@
         if(loaded) updateRateLabel();
       } catch(e) { console.error(e); const loader = document.getElementById('pbLoader'); if(loader) loader.innerHTML = '<span>❌ Помилка завантаження, використовуються резервні дані</span>'; setText('pbUsdBuy', 44.40); setText('pbUsdSell', 45.00); setText('pbEurBuy', 51.35); setText('pbEurSell', 52.35); setRateObject('USD', 44.40, 45.00); setRateObject('EUR', 51.35, 52.35); updateRateLabel(); }
     })();
+    // Кнопка оновлення сторінки в блоці ПриватБанк
+    document.getElementById('pbRefreshBtn')?.addEventListener('click', function() {
+      window.location.reload();
+    });
+    // Показ поточної дати в блоці ПриватБанк
+    function updatePbDate() {
+      const el = document.getElementById('pbUpdatedDate');
+      if (el) {
+        const now = new Date();
+        el.textContent = '📅 ' + now.toLocaleDateString('uk-UA', { day:'2-digit', month:'long', year:'numeric' }) + ' ' + now.toLocaleTimeString('uk-UA', { hour:'2-digit', minute:'2-digit' });
+      }
+    }
+    updatePbDate();
+    setInterval(updatePbDate, 60000);
     // Навігація та годинник
     const timeEl=document.getElementById('navTime'), dateEl=document.getElementById('navDate');
     function tick(){ const d=new Date(); if(timeEl) timeEl.textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); if(dateEl) dateEl.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }
@@ -1284,7 +1305,7 @@
     const hagueCountriesRaw = [ "Австралія (Австралійський Союз)","Австрія (Республіка Австрія)","Азербайджан (Азербайджанська Республіка)","Албанія (Республіка Албанія)","Андорра (Князівство Андорра)","Антигуа і Барбуда","Аргентина (Аргентинська Республіка)","Багами (Співдружність Багамських островів)","Бангладеш (Народна Республіка Бангладеш) – з 30.03.2025","Барбадос","Бахрейн (Королівство Бахрейн)","Беліз","Бельгія (Королівство Бельгія)","Білорусь (Республіка Білорусь)","Болгарія (Республіка Болгарія)","Болівія (Багатонаціональна Держава Болівія)","Боснія і Герцеговина","Ботсвана (Республіка Ботсвана)","Бразилія (Федеративна Республіка Бразилія)","Бруней (Держава Бруней-Даруссалам)","Бурунді (Республіка Бурунді)","Вануату (Республіка Вануату)","Венесуела (Венесуела (Боліварська Республіка))","Вірменія (Республіка Вірменія)","Гайана (Кооперативна Республіка Гайана)","Гватемала (Республіка Гватемала)","Гондурас (Республіка Гондурас)","Гренада","Греція (Грецька Республіка)","Грузія: Не поширюється на Абхазію та Південну Осетію","Данія (Королівство Данія): Не поширюється на Гренландію","Домініка (Співдружність Домініки)","Домініканська Республіка","Еквадор (Республіка Еквадор)","Естонія (Естонська Республіка)","Ізраїль (Держава Ізраїль)","Індія (Республіка Індія)","Індонезія (Республіка Індонезія)","Ірландія (Республіка Ірландія)","Ісландія","Іспанія (Королівство Іспанія)","Італія (Італійська Республіка)","Кабо-Верде (Республіка Кабо-Верде)","Казахстан (Республіка Казахстан)","Канада","Киргизстан (Киргизька Республіка)","Китай (Китайська Народна Республіка) – (Гонконг, Макао)","Кіпр (Республіка Кіпр)","Колумбія (Республіка Колумбія)","Королівство Есватіні","Королівство Нідерландів","Косово (Республіка Косово)","Коста-Рика (Республіка Коста-Рика)","Латвія (Латвійська Республіка)","Лесото (Королівство Лесото)","Литва (Литовська Республіка)","Ліберія (Республіка Ліберія)","Ліхтенштейн (Князівство Ліхтенштейн)","Люксембург (Велике Герцогство Люксембург)","Маврикій (Республіка Маврикій)","Малаві (Республіка Малаві)","Мальта (Республіка Мальта)","Марокко (Королівство Марокко)","Маршалові Острови (Республіка Маршалові Острови)","Мексика (Мексиканські Сполучені Штати)","Молдова (Республіка Молдова)","Монако (Князівство Монако)","Монголія","Намібія (Республіка Намібія)","Нікарагуа (Республіка Нікарагуа)","Німеччина (Федеративна Республіка Німеччина)","Ніуе","Нова Зеландія (не пошир. на Токелау)","Норвегія (Королівство Норвегія)","Оман (Султанат Оман)","Острови Кука","Пакистан (Ісламська Республіка Пакистан)","Палау (Республіка Палау)","Панама (Республіка Панама)","Парагвай (Республіка Парагвай)","Перу (Республіка Перу)","Південна Корея (Республіка Корея)","Південно-Африканська Республіка (ПАР)","Північна Македонія (Республіка Північна Македонія)","Польща (Республіка Польща)","Португалія (Португальська Республіка)","росія (російська федепідєрастія)","Руанда (Руандійська Республіка)","Румунія","Сальвадор (Республіка Ель-Сальвадор)","Самоа (Незалежна Держава Самоа)","Сан-Марино (Найясніша Республіка Сан-Марино)","Сан-Томе і Принсіпі","Саудівська Аравія (Королівство Саудівська Аравія)","Сейшельські острови (Республіка Сейшельські острови)","Сенегал (Республіка Сенегал)","Сент-Вінсент і Гренадіни","Сент-Кітс і Невіс (Федерація)","Сент-Люсія","Сербія (Республіка Сербія)","Сінгапур (Республіка Сінгапур)","Словаччина (Словацька Республіка)","Словенія (Республіка Словенія)","Сполучене Королівство Великобританії","Сполучені Штати Америки","Суринам (Республіка Суринам)","Таджикистан (Республіка Таджикистан)","Тонга (Королівство Тонга)","Тринідад і Тобаго (Республіка)","Туніс (Туніська Республіка)","Туреччина (Турецька Республіка)","Угорщина","Узбекистан (Республіка Узбекистан)","Україна (Не поширюється на тимчасово окуповані території)","Уругвай (Східна Республіка Уругвай)","Фіджі (Республіка Фіджі)","Філіппіни (Республіка Філіппіни)","Фінляндія (Фінляндська Республіка)","Франція (Французька Республіка)","Хорватія (Республіка Хорватія)","Чехія (Чеська Республіка)","Чилі (Республіка Чилі)","Чорногорія","Швейцарія (Швейцарська Конфедерація)","Швеція (Королівство Швеція)","Ямайка","Японія (Японська Держава)" ];
     function renderHagueList(filter = "") { const filtered = hagueCountriesRaw.filter(c => c.toLowerCase().includes(filter.toLowerCase())); const container = document.getElementById('hagueListContainer'); if(filtered.length === 0){ container.innerHTML = `<div class="empty-hague">😔 Країн не знайдено</div>`; return; } container.innerHTML = filtered.map(c => `<div class="hague-item">🌐 <span>${c}</span></div>`).join(''); }
     const hagueSearch = document.getElementById('hagueSearch'); if(hagueSearch) hagueSearch.addEventListener('input', (e) => renderHagueList(e.target.value)); renderHagueList("");
-    // НПА
+    // НПА (оновлений з розділеними постановами)
     const npaGroups = [
       { title: "Нотаріальні НПА", items: [ { name: "Закон \"Про Нотаріат\"", url: "https://zakon.rada.gov.ua/laws/show/3425-12#Text" }, { name: "Порядок вчинення дій", url: "https://zakon.rada.gov.ua/laws/show/z0282-12#Text" }, { name: "Правила ведення діловодства", url: "https://zakon.rada.gov.ua/laws/show/z1318-10#Text" } ] },
       { title: "Кодекси", items: [ { name: "Цивільний кодекс", url: "https://zakon.rada.gov.ua/laws/show/435-15#Text" }, { name: "Сімейний кодекс", url: "https://zakon.rada.gov.ua/laws/show/2947-14#Text" }, { name: "Податковий кодекс", url: "https://zakon.rada.gov.ua/laws/show/2755-17" }, { name: "ст. 172 ПКУ", url: "https://i.factor.ua/ukr/law-24/section-122/article-25602/?srsltid=AfmBOoqK6tvIAyLSC64WqBymkFQuarKmxypr6yy8avceD3H49IW-d-5c" }, { name: "Земельний кодекс", url: "https://zakon.rada.gov.ua/laws/show/2768-14#Text" } ] },
@@ -1295,10 +1316,12 @@
         { name: "Ваучери, пост. №1176", url: "https://zakon.rada.gov.ua/laws/show/1176-2025-п#Text" },
         { name: "Постанова 719", url: "https://zakon.rada.gov.ua/laws/show/719-2016-п#Text" },
         { name: "Постанова 280", url: "https://zakon.rada.gov.ua/laws/show/280-2018-п#Text" },
+      ] },
+      { title: "Інші постанови щодо фінансування придбання майна", items: [
         { name: "Постанова 214", url: "https://zakon.rada.gov.ua/laws/show/214-2018-п#Text" },
         { name: "Постанова 819", url: "https://zakon.rada.gov.ua/laws/show/819-2018-п#Text" },
+        { name: "Постанова 206", url: "https://zakon.rada.gov.ua/laws/show/206-2019-п#Text" }
         { name: "Постанова 980", url: "https://zakon.rada.gov.ua/laws/show/980-2019-п#Text" },
-        { name: "Постанова 206", url: "https://zakon.rada.gov.ua/laws/show/206-2019-п#Text" },
         { name: "Постанова 967 Держьмолодькредит житло", url: "https://zakon.rada.gov.ua/laws/show/967-2012-п#Text" },
         { name: "Постанова 856", url: "https://zakon.rada.gov.ua/laws/show/856-2022-п#Text" }
       ] },
