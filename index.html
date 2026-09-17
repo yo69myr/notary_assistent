@@ -1868,8 +1868,8 @@
   })();
 
 // ==========================================================
-// ============ QR-ПЛАТІЖ (NBU QR v2 — працює у Приват24,
-//              mono, Ощад, ПУМБ, будь-якому банку) ==========
+// ============ QR-ПЛАТІЖ (формат Приват24 — Base64 JSON,
+//              без URL-префіксу) ===========================
 // ==========================================================
 (function initQrPay(){
   const recipient = document.getElementById('qrRecipient');
@@ -1899,48 +1899,40 @@
     return isFinite(n) ? n.toFixed(2) : '';
   };
 
-  // NBU QR v2 — саме цей формат читає Приват24, mono, Ощад, ПУМБ
-  // та будь-який банк, що підтримує NBU QR.
-  function buildNbuQr(){
-    const nbuQr = {
-      recipient: (recipient.value || '').trim(),
-      recipientCode: (edrpou.value || '').trim(),
-      account: cleanIban(iban.value),
-      amount: normalizeAmount(amount.value),
-      purpose: (purpose.value || '').trim(),
-      currency: 'UAH'
+  // Формат Приват24: base64(JSON) БЕЗ URL-префіксу.
+  // Саме це читає камера iPhone → відкриває Приват24 з реквізитами.
+  // Мінімум полів — щоб payload був короткий і не давав TOO_LONG.
+  function buildPayPayload(){
+    const data = {
+      r: (recipient.value || '').trim(),        // recipient
+      a: cleanIban(iban.value),                 // account
+      s: normalizeAmount(amount.value),         // sum
+      p: (purpose.value || '').trim()           // purpose
     };
+    if (edrpou.value.trim()) data.c = edrpou.value.trim(); // code
 
-    // Прибираємо порожні поля — банки їх не люблять
-    Object.keys(nbuQr).forEach(k => {
-      if (nbuQr[k] === '' || nbuQr[k] == null) delete nbuQr[k];
+    // Прибираємо порожні
+    Object.keys(data).forEach(k => {
+      if (data[k] === '' || data[k] == null) delete data[k];
     });
 
-    const payload = {
-      version: '001',
-      type: '002',
-      nbuQr: nbuQr
-    };
-
-    const jsonStr = JSON.stringify(payload);
-    // UTF-8 safe Base64 (без escape/unescape — кирилиця має кодуватись коректно)
+    const jsonStr = JSON.stringify(data);
     const utf8 = new TextEncoder().encode(jsonStr);
     let bin = '';
     utf8.forEach(b => bin += String.fromCharCode(b));
-    const b64 = btoa(bin);
-
-    return 'https://qr.bank.gov.ua/#' + b64;
+    return btoa(bin);
   }
 
-  function renderQr(link){
+  function renderQr(text){
     previewBox.innerHTML = '';
+    // L-корекція + 320px = вміщає довгі payload
     new QRCode(previewBox, {
-      text: link,
-      width: 240,
-      height: 240,
+      text: text,
+      width: 320,
+      height: 320,
       colorDark: '#0f1424',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.L
     });
   }
 
@@ -1954,12 +1946,11 @@
     const amt = normalizeAmount(amount.value);
     if (!amt) { alert('Введіть суму до оплати'); amount.focus(); return; }
 
-    const link = buildNbuQr();
-    currentLink = link;
-    payLinkEl.textContent = link;
+    const payload = buildPayPayload();
+    currentLink = payload;
+    payLinkEl.textContent = payload;
 
-    renderQr(link);
-
+    renderQr(payload);
     [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = false);
   });
 
@@ -1970,13 +1961,14 @@
       copyBtn.textContent = '✅ Скопійовано!';
       setTimeout(() => copyBtn.textContent = '📋 Копіювати посилання', 1500);
     } catch(e) {
-      prompt('Скопіюйте посилання вручну:', currentLink);
+      prompt('Скопіюйте payload вручну:', currentLink);
     }
   });
 
   openBtn.addEventListener('click', () => {
     if (!currentLink) return;
-    window.open(currentLink, '_blank');
+    // Намагаємось відкрити у Приват24 напряму
+    window.open('https://www.privat24.ua/send/' + cleanIban(iban.value), '_blank');
   });
 
   downloadBtn.addEventListener('click', () => {
