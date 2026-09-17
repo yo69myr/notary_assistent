@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <style>
   :root{
     --bg-0:#f4f6fb;
@@ -1868,8 +1868,8 @@
   })();
 
 // ==========================================================
-// ============ QR-ПЛАТІЖ (формат Приват24 — Base64 JSON,
-//              без URL-префіксу) ===========================
+// ============ QR-ПЛАТІЖ (SEPA/EPC формат, сумісний з
+//              Приват24, mono, Ощад, будь-яким банком) =====
 // ==========================================================
 (function initQrPay(){
   const recipient = document.getElementById('qrRecipient');
@@ -1890,6 +1890,7 @@
   if(!genBtn) return;
 
   let currentLink = '';
+  let qrCanvas = null;
 
   const cleanIban = v => (v || '').replace(/\s+/g, '').toUpperCase();
   const normalizeAmount = v => {
@@ -1899,58 +1900,84 @@
     return isFinite(n) ? n.toFixed(2) : '';
   };
 
-  // Формат Приват24: base64(JSON) БЕЗ URL-префіксу.
-  // Саме це читає камера iPhone → відкриває Приват24 з реквізитами.
-  // Мінімум полів — щоб payload був короткий і не давав TOO_LONG.
-  function buildPayPayload(){
-    const data = {
-      r: (recipient.value || '').trim(),        // recipient
-      a: cleanIban(iban.value),                 // account
-      s: normalizeAmount(amount.value),         // sum
-      p: (purpose.value || '').trim()           // purpose
+  // Кодування кирилиці у Windows-1251 + Base64 URL-safe
+  function toBase64UrlWin1251(str) {
+    const win1251Map = {
+      'А':192,'Б':193,'В':194,'Г':195,'Ґ':168,'Д':196,'Е':197,'Є':170,'Ж':198,'З':199,'И':200,'І':178,'Ї':175,'Й':201,
+      'К':202,'Л':203,'М':204,'Н':205,'О':206,'П':207,'Р':208,'С':209,'Т':210,'У':211,'Ф':212,'Х':213,'Ц':214,'Ч':215,
+      'Ш':216,'Щ':217,'Ъ':218,'Ы':219,'Ь':220,'Э':221,'Ю':222,'Я':223,
+      'а':224,'б':225,'в':226,'г':227,'ґ':184,'д':228,'е':229,'є':186,'ж':230,'з':231,'и':232,'і':179,'ї':191,'й':233,
+      'к':234,'л':235,'м':236,'н':237,'о':238,'п':239,'р':240,'с':241,'т':242,'у':243,'ф':244,'х':245,'ц':246,'ч':247,
+      'ш':248,'щ':249,'ъ':250,'ы':251,'ь':252,'э':253,'ю':254,'я':255
     };
-    if (edrpou.value.trim()) data.c = edrpou.value.trim(); // code
-
-    // Прибираємо порожні
-    Object.keys(data).forEach(k => {
-      if (data[k] === '' || data[k] == null) delete data[k];
-    });
-
-    const jsonStr = JSON.stringify(data);
-    const utf8 = new TextEncoder().encode(jsonStr);
-    let bin = '';
-    utf8.forEach(b => bin += String.fromCharCode(b));
-    return btoa(bin);
+    const bytes = [];
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      const code = char.charCodeAt(0);
+      if (code < 128) {
+        bytes.push(code);
+      } else if (win1251Map[char] !== undefined) {
+        bytes.push(win1251Map[char]);
+      } else {
+        bytes.push(63);
+      }
+    }
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    const b64 = btoa(binary);
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
-  function renderQr(text){
+  // SEPA/EPC QR payload — точно те саме, що робить smartnotar
+  function buildPayLink(){
+    const name = (recipient.value || '').trim();
+    const ibanClean = cleanIban(iban.value);
+    const edrpouVal = (edrpou.value || '').trim();
+    const purposeVal = (purpose.value || '').trim();
+    const amt = normalizeAmount(amount.value);
+    const amountField = amt ? `UAH${amt}` : '';
+
+    const lines = [
+      'BCD',
+      '002',
+      '2',
+      'UCT',
+      '',
+      name,
+      ibanClean,
+      amountField,
+      edrpouVal,
+      '',
+      '',
+      purposeVal,
+      ''
+    ];
+
+    const qrText = lines.join('\n');
+    const encoded = toBase64UrlWin1251(qrText);
+    return 'https://bank.gov.ua/qr/' + encoded;
+  }
+
+  function renderQr(link){
     previewBox.innerHTML = '';
-    // L-корекція + 320px = вміщає довгі payload
-    new QRCode(previewBox, {
-      text: text,
-      width: 320,
-      height: 320,
-      colorDark: '#0f1424',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.L
+    qrCanvas = document.createElement('canvas');
+    previewBox.appendChild(qrCanvas);
+    QRCode.toCanvas(qrCanvas, link, { width: 300, margin: 1 }, function (error) {
+      if (error) console.error('Помилка QR-коду:', error);
     });
   }
 
   genBtn.addEventListener('click', () => {
     const ibanClean = cleanIban(iban.value);
     if (!ibanClean) { alert('Введіть рахунок (IBAN)'); iban.focus(); return; }
-    if (!/^UA\d{27}$/.test(ibanClean)) {
-      if (!confirm('IBAN не схожий на український (UA + 27 цифр). Продовжити?')) { iban.focus(); return; }
-    }
     if (!recipient.value.trim()) { alert('Введіть отримувача'); recipient.focus(); return; }
     const amt = normalizeAmount(amount.value);
     if (!amt) { alert('Введіть суму до оплати'); amount.focus(); return; }
 
-    const payload = buildPayPayload();
-    currentLink = payload;
-    payLinkEl.textContent = payload;
-
-    renderQr(payload);
+    const link = buildPayLink();
+    currentLink = link;
+    payLinkEl.textContent = link;
+    renderQr(link);
     [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = false);
   });
 
@@ -1961,22 +1988,20 @@
       copyBtn.textContent = '✅ Скопійовано!';
       setTimeout(() => copyBtn.textContent = '📋 Копіювати посилання', 1500);
     } catch(e) {
-      prompt('Скопіюйте payload вручну:', currentLink);
+      prompt('Скопіюйте посилання вручну:', currentLink);
     }
   });
 
   openBtn.addEventListener('click', () => {
     if (!currentLink) return;
-    // Намагаємось відкрити у Приват24 напряму
-    window.open('https://www.privat24.ua/send/' + cleanIban(iban.value), '_blank');
+    window.open(currentLink, '_blank');
   });
 
   downloadBtn.addEventListener('click', () => {
-    const canvas = previewBox.querySelector('canvas');
-    if (!canvas) return;
+    if (!qrCanvas) return;
     const a = document.createElement('a');
     a.download = 'payment-qr.png';
-    a.href = canvas.toDataURL('image/png');
+    a.href = qrCanvas.toDataURL('image/png');
     a.click();
   });
 
@@ -1985,6 +2010,7 @@
     previewBox.innerHTML = '<div class="qr-placeholder" id="qrPlaceholder">QR-код з’явиться тут після заповнення форми</div>';
     payLinkEl.textContent = 'Посилання на оплату з’явиться тут';
     currentLink = '';
+    qrCanvas = null;
     [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = true);
     recipient.focus();
   });
@@ -2001,10 +2027,6 @@
         v = v.slice(0, first + 1) + v.slice(first + 1).replace(new RegExp('\\' + sep, 'g'), '');
       }
       amount.value = v;
-    });
-    amount.addEventListener('blur', () => {
-      const a = normalizeAmount(amount.value);
-      if (a) amount.value = a.replace('.', ',');
     });
   }
 })();
