@@ -1867,149 +1867,136 @@
     npaGridEl.innerHTML = npaGroups.map(group => `<div class="npa-group"><h4>${group.title}</h4>${group.items.map(it => `<a href="${it.url}" target="_blank" class="npa-link"><span>📘 ${it.name}</span><span class="npa-arrow">→</span></a>`).join('')}</div>`).join('');
   })();
 
-  // ==========================================================
-  // ============ QR-ПЛАТІЖ (NBU QR v2, для Приват24) =========
-  // ==========================================================
-  (function initQrPay(){
-    const recipient = document.getElementById('qrRecipient');
-    const iban      = document.getElementById('qrIban');
-    const edrpou    = document.getElementById('qrEdrpou');
-    const purpose   = document.getElementById('qrPurpose');
-    const amount    = document.getElementById('qrAmount');
+// ==========================================================
+// ============ QR-ПЛАТІЖ (прямий deeplink ПриватБанку) ======
+// ==========================================================
+(function initQrPay(){
+  const recipient = document.getElementById('qrRecipient');
+  const iban      = document.getElementById('qrIban');
+  const edrpou    = document.getElementById('qrEdrpou');
+  const purpose   = document.getElementById('qrPurpose');
+  const amount    = document.getElementById('qrAmount');
 
-    const genBtn    = document.getElementById('qrGenerateBtn');
-    const clearBtn  = document.getElementById('qrClearBtn');
-    const copyBtn   = document.getElementById('qrCopyLinkBtn');
-    const openBtn   = document.getElementById('qrOpenLinkBtn');
-    const downloadBtn = document.getElementById('qrDownloadBtn');
+  const genBtn    = document.getElementById('qrGenerateBtn');
+  const clearBtn  = document.getElementById('qrClearBtn');
+  const copyBtn   = document.getElementById('qrCopyLinkBtn');
+  const openBtn   = document.getElementById('qrOpenLinkBtn');
+  const downloadBtn = document.getElementById('qrDownloadBtn');
 
-    const previewBox = document.getElementById('qrPreviewBox');
-    const payLinkEl   = document.getElementById('qrPayLink');
+  const previewBox = document.getElementById('qrPreviewBox');
+  const payLinkEl   = document.getElementById('qrPayLink');
 
-    if(!genBtn) return;
+  if(!genBtn) return;
 
-    let currentLink = '';
+  let currentLink = '';
 
-    const cleanIban = v => (v || '').replace(/\s+/g, '').toUpperCase();
-    const normalizeAmount = v => {
-      if (!v) return '';
-      const s = String(v).replace(/\s+/g, '').replace(',', '.').replace(/[^\d.]/g, '');
-      const n = parseFloat(s);
-      return isFinite(n) ? n.toFixed(2) : '';
-    };
+  const cleanIban = v => (v || '').replace(/\s+/g, '').toUpperCase();
+  const normalizeAmount = v => {
+    if (!v) return '';
+    const s = String(v).replace(/\s+/g, '').replace(',', '.').replace(/[^\d.]/g, '');
+    const n = parseFloat(s);
+    return isFinite(n) ? n.toFixed(2) : '';
+  };
 
-    // NBU QR payload (те, що реально читає Приват24 / mono / Ощад)
-    // Формат: https://qr.bank.gov.ua/#<base64(UTF-8 JSON)>
-    function buildNbuPayload(){
-      const json = {
-        version: '001',
-        type: '002',
-        recipient: (recipient.value || '').trim(),
-        recipientCode: (edrpou.value || '').trim(),
-        account: cleanIban(iban.value),
-        purpose: (purpose.value || '').trim(),
-        amount: normalizeAmount(amount.value),
-        currency: 'UAH'
-      };
-      // Прибираємо порожні значення — банки не люблять порожніх полів
-      Object.keys(json).forEach(k => {
-        if (json[k] === '' || json[k] == null) delete json[k];
-      });
+  // Генеруємо прямий платіжний deeplink ПриватБанку —
+  // саме його розпізнає камера iPhone і відкриває Приват24.
+  function buildPayLink(){
+    const ibanClean = cleanIban(iban.value);
+    const amt = normalizeAmount(amount.value);
+    const cmt = (purpose.value || '').trim();
 
-      const jsonStr = JSON.stringify(json);
-      // UTF-8 safe Base64 (без escape/unescape — щоб не було проблем з кирилицею)
-      const utf8 = new TextEncoder().encode(jsonStr);
-      let bin = '';
-      utf8.forEach(b => bin += String.fromCharCode(b));
-      const b64 = btoa(bin);
+    const params = [];
+    if (amt) params.push('amount=' + encodeURIComponent(amt));
+    if (cmt) params.push('comment=' + encodeURIComponent(cmt));
 
-      return 'https://qr.bank.gov.ua/#' + b64;
+    const q = params.length ? ('?' + params.join('&')) : '';
+    return 'https://www.privat24.ua/send/' + ibanClean + q;
+  }
+
+  function renderQr(link){
+    previewBox.innerHTML = '';
+    new QRCode(previewBox, {
+      text: link,
+      width: 240,
+      height: 240,
+      colorDark: '#0f1424',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+
+  genBtn.addEventListener('click', () => {
+    const ibanClean = cleanIban(iban.value);
+    if (!ibanClean) { alert('Введіть рахунок (IBAN)'); iban.focus(); return; }
+    if (!/^UA\d{27}$/.test(ibanClean)) {
+      if (!confirm('IBAN не схожий на український (UA + 27 цифр). Продовжити?')) { iban.focus(); return; }
     }
+    if (!recipient.value.trim()) { alert('Введіть отримувача'); recipient.focus(); return; }
+    const amt = normalizeAmount(amount.value);
+    if (!amt) { alert('Введіть суму до оплати'); amount.focus(); return; }
 
-    function renderQr(link){
-      previewBox.innerHTML = '';
-      new QRCode(previewBox, {
-        text: link,
-        width: 240,
-        height: 240,
-        colorDark: '#0f1424',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
+    const link = buildPayLink();
+    currentLink = link;
+    payLinkEl.textContent = link;
+
+    renderQr(link);
+
+    [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = false);
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!currentLink) return;
+    try {
+      await navigator.clipboard.writeText(currentLink);
+      copyBtn.textContent = '✅ Скопійовано!';
+      setTimeout(() => copyBtn.textContent = '📋 Копіювати посилання', 1500);
+    } catch(e) {
+      prompt('Скопіюйте посилання вручну:', currentLink);
     }
+  });
 
-    genBtn.addEventListener('click', () => {
-      const ibanClean = cleanIban(iban.value);
-      if (!ibanClean) { alert('Введіть рахунок (IBAN)'); iban.focus(); return; }
-      if (!/^UA\d{27}$/.test(ibanClean)) {
-        if (!confirm('IBAN не схожий на український (UA + 27 цифр). Продовжити?')) { iban.focus(); return; }
+  openBtn.addEventListener('click', () => {
+    if (!currentLink) return;
+    window.open(currentLink, '_blank');
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    const canvas = previewBox.querySelector('canvas');
+    if (!canvas) return;
+    const a = document.createElement('a');
+    a.download = 'payment-qr.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    [recipient, iban, edrpou, purpose, amount].forEach(el => { if (el) el.value = ''; });
+    previewBox.innerHTML = '<div class="qr-placeholder" id="qrPlaceholder">QR-код з’явиться тут після заповнення форми</div>';
+    payLinkEl.textContent = 'Посилання на оплату з’явиться тут';
+    currentLink = '';
+    [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = true);
+    recipient.focus();
+  });
+
+  if (amount) {
+    amount.addEventListener('input', () => {
+      let v = amount.value.replace(/[^\d,.]/g, '');
+      const first = Math.min(
+        v.indexOf(',') === -1 ? Infinity : v.indexOf(','),
+        v.indexOf('.') === -1 ? Infinity : v.indexOf('.')
+      );
+      if (first !== Infinity) {
+        const sep = v[first];
+        v = v.slice(0, first + 1) + v.slice(first + 1).replace(new RegExp('\\' + sep, 'g'), '');
       }
-      if (!recipient.value.trim()) { alert('Введіть отримувача'); recipient.focus(); return; }
-      const amt = normalizeAmount(amount.value);
-      if (!amt) { alert('Введіть суму до оплати'); amount.focus(); return; }
-
-      const link = buildNbuPayload();
-      currentLink = link;
-      payLinkEl.textContent = link;
-
-      renderQr(link);
-
-      [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = false);
+      amount.value = v;
     });
-
-    copyBtn.addEventListener('click', async () => {
-      if (!currentLink) return;
-      try {
-        await navigator.clipboard.writeText(currentLink);
-        copyBtn.textContent = '✅ Скопійовано!';
-        setTimeout(() => copyBtn.textContent = '📋 Копіювати посилання', 1500);
-      } catch(e) {
-        prompt('Скопіюйте посилання вручну:', currentLink);
-      }
+    amount.addEventListener('blur', () => {
+      const a = normalizeAmount(amount.value);
+      if (a) amount.value = a.replace('.', ',');
     });
-
-    openBtn.addEventListener('click', () => {
-      if (!currentLink) return;
-      window.open(currentLink, '_blank');
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      const canvas = previewBox.querySelector('canvas');
-      if (!canvas) return;
-      const a = document.createElement('a');
-      a.download = 'payment-qr.png';
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-    });
-
-    clearBtn.addEventListener('click', () => {
-      [recipient, iban, edrpou, purpose, amount].forEach(el => { if (el) el.value = ''; });
-      previewBox.innerHTML = '<div class="qr-placeholder" id="qrPlaceholder">QR-код з’явиться тут після заповнення форми</div>';
-      payLinkEl.textContent = 'Посилання на оплату з’явиться тут';
-      currentLink = '';
-      [copyBtn, openBtn, downloadBtn].forEach(b => b.disabled = true);
-      recipient.focus();
-    });
-
-    if (amount) {
-      amount.addEventListener('input', () => {
-        let v = amount.value.replace(/[^\d,.]/g, '');
-        const first = Math.min(
-          v.indexOf(',') === -1 ? Infinity : v.indexOf(','),
-          v.indexOf('.') === -1 ? Infinity : v.indexOf('.')
-        );
-        if (first !== Infinity) {
-          const sep = v[first];
-          v = v.slice(0, first + 1) + v.slice(first + 1).replace(new RegExp('\\' + sep, 'g'), '');
-        }
-        amount.value = v;
-      });
-      amount.addEventListener('blur', () => {
-        const a = normalizeAmount(amount.value);
-        if (a) amount.value = a.replace('.', ',');
-      });
-    }
-  })();
+  }
+})();
 </script>
 </body>
 </html>
