@@ -1868,7 +1868,8 @@
   })();
 
 // ==========================================================
-// ============ QR-ПЛАТІЖ (прямий deeplink ПриватБанку) ======
+// ============ QR-ПЛАТІЖ (NBU QR v2 — працює у Приват24,
+//              mono, Ощад, ПУМБ, будь-якому банку) ==========
 // ==========================================================
 (function initQrPay(){
   const recipient = document.getElementById('qrRecipient');
@@ -1898,19 +1899,37 @@
     return isFinite(n) ? n.toFixed(2) : '';
   };
 
-  // Генеруємо прямий платіжний deeplink ПриватБанку —
-  // саме його розпізнає камера iPhone і відкриває Приват24.
-  function buildPayLink(){
-    const ibanClean = cleanIban(iban.value);
-    const amt = normalizeAmount(amount.value);
-    const cmt = (purpose.value || '').trim();
+  // NBU QR v2 — саме цей формат читає Приват24, mono, Ощад, ПУМБ
+  // та будь-який банк, що підтримує NBU QR.
+  function buildNbuQr(){
+    const nbuQr = {
+      recipient: (recipient.value || '').trim(),
+      recipientCode: (edrpou.value || '').trim(),
+      account: cleanIban(iban.value),
+      amount: normalizeAmount(amount.value),
+      purpose: (purpose.value || '').trim(),
+      currency: 'UAH'
+    };
 
-    const params = [];
-    if (amt) params.push('amount=' + encodeURIComponent(amt));
-    if (cmt) params.push('comment=' + encodeURIComponent(cmt));
+    // Прибираємо порожні поля — банки їх не люблять
+    Object.keys(nbuQr).forEach(k => {
+      if (nbuQr[k] === '' || nbuQr[k] == null) delete nbuQr[k];
+    });
 
-    const q = params.length ? ('?' + params.join('&')) : '';
-    return 'https://www.privat24.ua/send/' + ibanClean + q;
+    const payload = {
+      version: '001',
+      type: '002',
+      nbuQr: nbuQr
+    };
+
+    const jsonStr = JSON.stringify(payload);
+    // UTF-8 safe Base64 (без escape/unescape — кирилиця має кодуватись коректно)
+    const utf8 = new TextEncoder().encode(jsonStr);
+    let bin = '';
+    utf8.forEach(b => bin += String.fromCharCode(b));
+    const b64 = btoa(bin);
+
+    return 'https://qr.bank.gov.ua/#' + b64;
   }
 
   function renderQr(link){
@@ -1935,7 +1954,7 @@
     const amt = normalizeAmount(amount.value);
     if (!amt) { alert('Введіть суму до оплати'); amount.focus(); return; }
 
-    const link = buildPayLink();
+    const link = buildNbuQr();
     currentLink = link;
     payLinkEl.textContent = link;
 
